@@ -5,9 +5,10 @@ import com.nasreen.carlog.request.CarCreateRequest;
 import com.nasreen.carlog.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/cars",
@@ -24,5 +25,12 @@ public class CarController {
     @RequestMapping("")
     public Car create(@RequestBody CarCreateRequest createRequest) {
         return service.create(createRequest);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Car> get(@PathVariable UUID id) {
+        return service.get(id)
+                .map(car -> ResponseEntity.ok(car))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
