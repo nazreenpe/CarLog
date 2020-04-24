@@ -3,13 +3,13 @@ package com.nasreen.carlog.request;
 public class CarCreateRequest {
     private String make;
     private String model;
-    private int year;
+    private Integer year;
     private String trim;
 
     public CarCreateRequest() {
     }
 
-    public CarCreateRequest(String make, String model, int year, String trim) {
+    public CarCreateRequest(String make, String model, Integer year, String trim) {
         this.make = make;
         this.model = model;
         this.year = year;
