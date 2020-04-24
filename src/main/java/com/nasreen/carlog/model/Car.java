@@ -1,15 +1,19 @@
 package com.nasreen.carlog.model;
 
+import java.util.UUID;
+
 public class Car {
     private String make;
     private String model;
-    private int year;
+    private Integer year;
     private String trim;
+    private UUID id;
 
     public Car() {
     }
 
-    public Car(String make, String model, int year, String trim) {
+    public Car(String make, String model, Integer year, String trim) {
+        this.id = UUID.randomUUID();
         this.make = make;
         this.model = model;
         this.year = year;
@@ -24,11 +28,15 @@ public class Car {
         return model;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
     public String getTrim() {
         return trim;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }
