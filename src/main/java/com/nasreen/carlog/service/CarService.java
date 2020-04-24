@@ -24,4 +24,12 @@ public class CarService {
                 .filter(car -> car.getId().equals(id))
                 .findFirst();
     }
+
+    public Optional<UUID> delete(UUID id) {
+        return get(id)
+                .map(car -> {
+                    cars.remove(car);
+                    return id;
+                });
+    }
 }

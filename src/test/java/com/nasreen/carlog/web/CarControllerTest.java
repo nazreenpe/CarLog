@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -103,8 +102,25 @@ class CarControllerTest {
 
     @Test
     public void shouldNotFetchNonExistingCar() throws Exception {
-        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
         this.mockMvc.perform(get(String.format("/cars/%s", UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldBeAbleToDeleteAnExistingCar() throws Exception {
+        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        Car createdCar = carService.create(createRequest);
+        this.mockMvc.perform(delete(String.format("/cars/%s", createdCar.getId()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void shouldNotDeleteNonExistingCar() throws Exception {
+        this.mockMvc.perform(delete(String.format("/cars/%s", UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());

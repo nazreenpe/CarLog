@@ -33,4 +33,11 @@ public class CarController {
                 .map(car -> ResponseEntity.ok(car))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<UUID> delete(@PathVariable UUID id) {
+        return service.delete(id)
+                .map(deletedId -> ResponseEntity.ok(deletedId))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
