@@ -2,8 +2,11 @@ package com.nasreen.carlog.service;
 
 import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.request.CarCreateRequest;
+import com.nasreen.carlog.request.CarUpdateRequest;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +33,14 @@ public class CarService {
                 .map(car -> {
                     cars.remove(car);
                     return id;
+                });
+    }
+
+    public Optional<Car> update(UUID id, CarUpdateRequest request) {
+        return get(id)
+                .map(car -> {
+                    car.setTrim(request.getTrim().get());
+                    return car;
                 });
     }
 }

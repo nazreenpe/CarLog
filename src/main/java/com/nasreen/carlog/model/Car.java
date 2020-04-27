@@ -39,4 +39,20 @@ public class Car {
     public UUID getId() {
         return id;
     }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public void setTrim(String trim) {
+        this.trim = trim;
+    }
 }

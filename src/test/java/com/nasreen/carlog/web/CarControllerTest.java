@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,4 +126,23 @@ class CarControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void shouldUpdateExistingCar() throws Exception {
+        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        Car createdCar = carService.create(createRequest);
+        this.mockMvc.perform(put(String.format("/cars/%s", createdCar.getId()))
+                .content(objectMapper.writeValueAsString(Map.of("trim", "Sport")))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+        .andExpect(result -> {
+            Car fetchedCar = objectMapper.readValue(result.getResponse().getContentAsString(), Car.class);
+            assertThat(fetchedCar.getId()).isEqualTo(createdCar.getId());
+            assertThat(fetchedCar.getMake()).isEqualTo("Toyota");
+            assertThat(fetchedCar.getModel()).isEqualTo("RAV4");
+            assertThat(fetchedCar.getTrim()).isEqualTo("Sport");
+            assertThat(fetchedCar.getYear()).isEqualTo(2018);
+        });
+        }
 }
