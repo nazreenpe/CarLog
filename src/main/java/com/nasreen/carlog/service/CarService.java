@@ -39,7 +39,10 @@ public class CarService {
     public Optional<Car> update(UUID id, CarUpdateRequest request) {
         return get(id)
                 .map(car -> {
-                    car.setTrim(request.getTrim().get());
+                    request.getTrim().ifPresent(car::setTrim);
+                    request.getMake().ifPresent(car::setMake);
+                    request.getModel().ifPresent(car::setModel);
+                    request.getYear().ifPresent(car::setYear);
                     return car;
                 });
     }

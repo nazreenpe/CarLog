@@ -31,21 +31,21 @@ public class CarController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Car> get(@PathVariable UUID id) {
         return service.get(id)
-                .map(car -> ResponseEntity.ok(car))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<UUID> delete(@PathVariable UUID id) {
         return service.delete(id)
-                .map(deletedId -> ResponseEntity.ok(deletedId))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Car> update(@PathVariable UUID id, @RequestBody CarUpdateRequest request) {
         return service.update(id, request)
-                .map(deletedId -> ResponseEntity.ok(deletedId))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }

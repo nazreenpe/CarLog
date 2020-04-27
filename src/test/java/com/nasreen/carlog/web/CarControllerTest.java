@@ -78,7 +78,7 @@ class CarControllerTest {
     @Test
     public void canNotCreateCarWhenMakeIsMissing() throws Exception {
         this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
-                .content("{'model':'RAV4','year':1978,'trim':'LE'}"))
+                .content( "{'model':'RAV4','year':1978,'trim':'LE'}"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -132,17 +132,29 @@ class CarControllerTest {
         CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
         this.mockMvc.perform(put(String.format("/cars/%s", createdCar.getId()))
-                .content(objectMapper.writeValueAsString(Map.of("trim", "Sport")))
+                .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport",
+                        "make", "Ford",
+                        "model", "Escape",
+                        "year", 2020)))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-        .andExpect(result -> {
-            Car fetchedCar = objectMapper.readValue(result.getResponse().getContentAsString(), Car.class);
-            assertThat(fetchedCar.getId()).isEqualTo(createdCar.getId());
-            assertThat(fetchedCar.getMake()).isEqualTo("Toyota");
-            assertThat(fetchedCar.getModel()).isEqualTo("RAV4");
-            assertThat(fetchedCar.getTrim()).isEqualTo("Sport");
-            assertThat(fetchedCar.getYear()).isEqualTo(2018);
-        });
-        }
+                .andExpect(result -> {
+                    Car fetchedCar = objectMapper.readValue(result.getResponse().getContentAsString(), Car.class);
+                    assertThat(fetchedCar.getId()).isEqualTo(createdCar.getId());
+                    assertThat(fetchedCar.getMake()).isEqualTo("Ford");
+                    assertThat(fetchedCar.getModel()).isEqualTo("Escape");
+                    assertThat(fetchedCar.getTrim()).isEqualTo("SE Sport");
+                    assertThat(fetchedCar.getYear()).isEqualTo(2020);
+                });
+    }
+
+    @Test
+    public void shouldNotUpdateNonExistingCar() throws Exception {
+        this.mockMvc.perform(put(String.format("/cars/%s", UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport"))))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 }
