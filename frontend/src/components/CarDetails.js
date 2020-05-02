@@ -1,8 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-const backEnd = axios.create({
-    headers: {'content-type': 'application/json'}
-  });
 
 class CarDetails extends React.Component {
     constructor(props) {
@@ -17,7 +14,7 @@ class CarDetails extends React.Component {
             hasLoaded: false
         };
 
-        backEnd.get(`/cars/${props.id}`, null, {
+        axios.get(`/cars/${props.id}`, null, {
             headers: {
                 'Content-Type': 'application/json',
             }
