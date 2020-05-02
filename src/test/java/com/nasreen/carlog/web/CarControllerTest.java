@@ -1,5 +1,6 @@
 package com.nasreen.carlog.web;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.request.CarCreateRequest;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -75,7 +77,7 @@ class CarControllerTest {
     @Test
     public void canNotCreateCarWhenMakeIsMissing() throws Exception {
         this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
-                .content( "{'model':'RAV4','year':1978,'trim':'LE'}"))
+                .content("{'model':'RAV4','year':1978,'trim':'LE'}"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -151,5 +153,26 @@ class CarControllerTest {
                 .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport"))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldFetchAllExistingCars() throws Exception {
+        carService.deleteAll();
+        CarCreateRequest createRequest1 = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        Car createdCar1 = carService.create(createRequest1);
+        CarCreateRequest createRequest2 = new CarCreateRequest("Toyota", "PRIUS", 2018, "LE");
+        Car createdCar2 = carService.create(createRequest2);
+        this.mockMvc.perform(get("/cars")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    List<Car> fetchedCars = objectMapper.readValue(result.getResponse().getContentAsString(),
+                            new TypeReference<>() {
+                            });
+                    assertThat(fetchedCars)
+                            .usingFieldByFieldElementComparator()
+                            .containsExactly(createdCar1, createdCar2);
+                });
     }
 }

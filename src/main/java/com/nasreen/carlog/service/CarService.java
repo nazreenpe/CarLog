@@ -46,4 +46,12 @@ public class CarService {
                     return car;
                 });
     }
+
+    public void deleteAll() {
+        cars.clear();
+    }
+
+    public List<Car> list() {
+        return cars;
+    }
 }
