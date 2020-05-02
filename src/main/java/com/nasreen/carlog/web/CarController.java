@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,9 +24,14 @@ public class CarController {
         this.service = service;
     }
 
-    @RequestMapping("")
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public Car create(@RequestBody CarCreateRequest createRequest) {
         return service.create(createRequest);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List<Car> list() {
+        return service.list();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
