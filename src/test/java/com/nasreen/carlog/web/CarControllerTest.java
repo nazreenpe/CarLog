@@ -130,8 +130,6 @@ class CarControllerTest {
         Car createdCar = carService.create(createRequest);
         this.mockMvc.perform(put(String.format("/cars/%s", createdCar.getId()))
                 .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport",
-                        "make", "Ford",
-                        "model", "Escape",
                         "year", 2020)))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -139,8 +137,8 @@ class CarControllerTest {
                 .andExpect(result -> {
                     Car fetchedCar = objectMapper.readValue(result.getResponse().getContentAsString(), Car.class);
                     assertThat(fetchedCar.getId()).isEqualTo(createdCar.getId());
-                    assertThat(fetchedCar.getMake()).isEqualTo("Ford");
-                    assertThat(fetchedCar.getModel()).isEqualTo("Escape");
+                    assertThat(fetchedCar.getMake()).isEqualTo("Toyota");
+                    assertThat(fetchedCar.getModel()).isEqualTo("RAV4");
                     assertThat(fetchedCar.getTrim()).isEqualTo("SE Sport");
                     assertThat(fetchedCar.getYear()).isEqualTo(2020);
                 });

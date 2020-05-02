@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Optional;
 
 public class CarUpdateRequest {
-    private Optional<String> make;
-    private Optional<String>  model;
-    private Optional<Integer>  year;
-    private Optional<String>  trim;
+    private Optional<String> make = Optional.empty();
+    private Optional<String>  model = Optional.empty();
+    private Optional<Integer>  year = Optional.empty();
+    private Optional<String>  trim = Optional.empty();
 
     public CarUpdateRequest() {
     }
