@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,6 +33,13 @@ public class MaintenanceRecordController {
             @RequestBody MaintenanceRecordCreateRequest request) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.status(HttpStatus.CREATED).body(service.create(request, car)))
+                .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<MaintenanceRecord>> list(@PathVariable UUID carId) {
+        return carService.get(carId)
+                .map(car -> ResponseEntity.ok(service.list(car)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 }

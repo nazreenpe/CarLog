@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MaintenanceRecordService {
@@ -17,5 +18,11 @@ public class MaintenanceRecordService {
         MaintenanceRecord record = new MaintenanceRecord(request.getDate(), car.getId());
         records.add(record);
         return record;
+    }
+
+    public List<MaintenanceRecord> list(Car car) {
+        return records.stream()
+        .filter(record -> record.getCarId().equals(car.getId()))
+        .collect(Collectors.toList());
     }
 }
