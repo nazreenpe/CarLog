@@ -4,9 +4,6 @@ import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.request.CarCreateRequest;
 import com.nasreen.carlog.request.CarUpdateRequest;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
