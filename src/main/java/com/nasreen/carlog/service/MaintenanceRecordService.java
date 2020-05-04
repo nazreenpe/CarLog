@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -24,5 +25,11 @@ public class MaintenanceRecordService {
         return records.stream()
         .filter(record -> record.getCarId().equals(car.getId()))
         .collect(Collectors.toList());
+    }
+
+    public Optional<MaintenanceRecord> get(Car car, UUID id) {
+        return records.stream()
+                .filter(record -> record.getCarId().equals(car.getId()) && record.getId().equals(id))
+                .findFirst();
     }
 }
