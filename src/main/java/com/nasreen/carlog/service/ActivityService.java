@@ -38,10 +38,10 @@ public class ActivityService {
     }
 
     public Optional<Activity> update(UUID recordId, UUID id, ActivityUpdate request) {
-        return this.get(recordId, id)
-                .map(activity -> {
+        return repository.findById(recordId, id)
+                .flatMap(activity -> {
                     request.getType().ifPresent(updateType -> activity.setType(updateType));
-                    return activity;
+                    return repository.update(activity);
                 });
     }
 
