@@ -28,4 +28,8 @@ public class MaintenanceRecord {
     public UUID getCarId() {
         return carId;
     }
+
+    public void setDate(LocalDate newDate) {
+        this.date = newDate;
+    }
 }
