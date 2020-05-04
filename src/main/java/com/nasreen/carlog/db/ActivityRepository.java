@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,5 +43,15 @@ public class ActivityRepository {
                         ActivityType.valueOf(rs.getString("type")),
                         UUID.fromString(rs.getString("record_id"))))
                 .findFirst());
+    }
+
+    public List<Activity> list(UUID recordId) {
+        return jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM activities WHERE record_id = :recordId")
+                .bind("recordId", recordId.toString())
+                .map((rs, ctx) -> new Activity(UUID.fromString(rs.getString("id")),
+                        ActivityType.valueOf(rs.getString("type")),
+                        UUID.fromString(rs.getString("record_id"))))
+                .list()
+                );
     }
 }
