@@ -79,4 +79,16 @@ public class ActivityController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<UUID> delete(
+            @PathVariable UUID carId,
+            @PathVariable UUID recordId,
+            @PathVariable UUID id) {
+        return carService.get(carId)
+                .flatMap(car -> recordService.get(car, recordId)
+                        .flatMap(record -> service.delete(record.getId(), id)))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

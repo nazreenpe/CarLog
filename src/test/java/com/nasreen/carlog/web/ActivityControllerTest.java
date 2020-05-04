@@ -150,7 +150,6 @@ class ActivityControllerTest {
                 });
     }
 
-
     @Test
     public void shouldNotUpdateAnNonExistingActivity() throws Exception {
         Car car = carService.create(new CarCreateRequest("Toyota", "Prius", 2020, "XLE"));
@@ -163,4 +162,25 @@ class ActivityControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void shouldDeleteAnExistingActivity() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "Prius", 2020, "XLE"));
+        MaintenanceRecord record = recordService.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        Activity activity = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION));
+        this.mockMvc.perform(delete(String.format("/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), activity.getId()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void shouldNotDeleteNonExistingActivity() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "Prius", 2020, "XLE"));
+        MaintenanceRecord record = recordService.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        this.mockMvc.perform(delete(String.format("/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(),
+                UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 }
