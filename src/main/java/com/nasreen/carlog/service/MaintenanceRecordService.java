@@ -40,4 +40,10 @@ public class MaintenanceRecordService {
                 .peek(record -> update.getDate().ifPresent(newDate -> record.setDate(newDate)))
                 .findFirst();
     }
+
+    public void delete(Car car, UUID id) {
+        records.removeIf(record -> {
+            return record.getCarId().equals(car.getId()) && record.getId().equals(id);
+        });
+    }
 }
