@@ -41,4 +41,12 @@ public class ActivityService {
                     return activity;
                 });
     }
+
+    public Optional<UUID> delete(UUID recordId, UUID id) {
+        return this.get(recordId, id)
+                .map(activity -> {
+                    activities.remove(activity);
+                    return activity.getId();
+                });
+    }
 }
