@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,5 +24,12 @@ public class ActivityService {
         return activities.stream()
                 .filter(activity -> activity.getRecordId().equals(recordId))
                 .collect(Collectors.toList());
+    }
+
+    public Optional<Activity> get(UUID recordId, UUID id) {
+        return activities.stream()
+                .filter(activity -> activity.getRecordId().equals(recordId) &&
+                        activity.getId().equals(id))
+                .findFirst();
     }
 }

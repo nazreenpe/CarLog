@@ -52,4 +52,16 @@ public class ActivityController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Activity> get(
+            @PathVariable UUID carId,
+            @PathVariable UUID recordId,
+            @PathVariable UUID id) {
+        return carService.get(carId)
+                .flatMap(car -> recordService.get(car, recordId)
+                        .flatMap(record -> service.get(record.getId(), id)))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

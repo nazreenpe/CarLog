@@ -102,4 +102,33 @@ class ActivityControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void shouldFetchAnActivityForExistingRecord() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2020, "XLE"));
+        MaintenanceRecord record = recordService.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        service.create(record.getId(), new ActivityCreate(ActivityType.REPLACE_WIPER));
+        Activity activity2 = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION));
+        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), activity2.getId()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    Activity activity = objectMapper.readValue(result.getResponse().getContentAsByteArray(), Activity.class);
+                    assertThat(activity).usingRecursiveComparison()
+                            .isEqualTo(activity2);
+                });
+    }
+
+    @Test
+    public void shouldNotFetchNonExistingActivity() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2020, "XLE"));
+        MaintenanceRecord record = recordService.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        service.create(record.getId(), new ActivityCreate(ActivityType.REPLACE_WIPER));
+        Activity activity2 = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION));
+        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 }
