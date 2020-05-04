@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -40,6 +41,13 @@ public class MaintenanceRecordController {
     public ResponseEntity<List<MaintenanceRecord>> list(@PathVariable UUID carId) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.ok(service.list(car)))
+                .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Optional<MaintenanceRecord>> get(@PathVariable UUID carId, @PathVariable UUID id) {
+        return carService.get(carId)
+                .map(car -> ResponseEntity.ok(service.get(car, id)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 }

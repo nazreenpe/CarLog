@@ -89,4 +89,20 @@ public class MaintenanceRecordControllerTest {
                 });
     }
 
+    @Test
+    public void shouldFetchExistingMaintenanceRecord() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
+        MaintenanceRecord record1 = service.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId() ))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    MaintenanceRecord record = objectMapper.readValue(result.getResponse().getContentAsString(), MaintenanceRecord.class);
+                    assertThat(record)
+                            .usingRecursiveComparison()
+                            .isEqualTo(record1);
+                });
+    }
+
 }
