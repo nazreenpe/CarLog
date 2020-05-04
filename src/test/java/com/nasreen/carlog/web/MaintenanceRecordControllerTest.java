@@ -22,8 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,7 +92,7 @@ public class MaintenanceRecordControllerTest {
     public void shouldFetchExistingMaintenanceRecord() throws Exception {
         Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
         MaintenanceRecord record1 = service.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
-        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId() ))
+        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -102,6 +101,30 @@ public class MaintenanceRecordControllerTest {
                     assertThat(record)
                             .usingRecursiveComparison()
                             .isEqualTo(record1);
+                });
+    }
+
+    @Test
+    public void shouldNotFetchNonExistingMaintenanceRecord() throws Exception {
+        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s", UUID.randomUUID(), UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldUpdateExistingMaintenanceRecord() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
+        MaintenanceRecord record1 = service.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        LocalDate newDate = LocalDate.now().plusDays(1);
+        this.mockMvc.perform(put(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(Map.of("date", newDate))))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    MaintenanceRecord record = objectMapper.readValue(result.getResponse().getContentAsString(), MaintenanceRecord.class);
+                    assertThat(record.getDate()).isEqualTo(newDate);
                 });
     }
 

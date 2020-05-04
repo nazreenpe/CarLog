@@ -2,6 +2,7 @@ package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.model.MaintenanceRecord;
 import com.nasreen.carlog.request.MaintenanceRecordCreateRequest;
+import com.nasreen.carlog.request.MaintenanceRecordUpdate;
 import com.nasreen.carlog.service.CarService;
 import com.nasreen.carlog.service.MaintenanceRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,16 @@ public class MaintenanceRecordController {
     public ResponseEntity<Optional<MaintenanceRecord>> get(@PathVariable UUID carId, @PathVariable UUID id) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.ok(service.get(car, id)))
-                .orElse(ResponseEntity.badRequest().build());
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Optional<MaintenanceRecord>> update(
+            @PathVariable UUID carId,
+            @PathVariable UUID id,
+            @RequestBody MaintenanceRecordUpdate update) {
+        return carService.get(carId)
+                .map(car -> ResponseEntity.ok(service.update(car, id, update)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

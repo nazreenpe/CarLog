@@ -3,6 +3,7 @@ package com.nasreen.carlog.service;
 import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.model.MaintenanceRecord;
 import com.nasreen.carlog.request.MaintenanceRecordCreateRequest;
+import com.nasreen.carlog.request.MaintenanceRecordUpdate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +31,13 @@ public class MaintenanceRecordService {
     public Optional<MaintenanceRecord> get(Car car, UUID id) {
         return records.stream()
                 .filter(record -> record.getCarId().equals(car.getId()) && record.getId().equals(id))
+                .findFirst();
+    }
+
+    public Optional<MaintenanceRecord> update(Car car, UUID id, MaintenanceRecordUpdate update) {
+        return records.stream()
+                .filter(record -> record.getCarId().equals(car.getId()) && record.getId().equals(id))
+                .peek(record -> update.getDate().ifPresent(newDate -> record.setDate(newDate)))
                 .findFirst();
     }
 }
