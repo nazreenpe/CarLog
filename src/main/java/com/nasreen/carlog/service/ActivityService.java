@@ -2,6 +2,7 @@ package com.nasreen.carlog.service;
 
 import com.nasreen.carlog.model.Activity;
 import com.nasreen.carlog.request.ActivityCreate;
+import com.nasreen.carlog.request.ActivityUpdate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,5 +32,13 @@ public class ActivityService {
                 .filter(activity -> activity.getRecordId().equals(recordId) &&
                         activity.getId().equals(id))
                 .findFirst();
+    }
+
+    public Optional<Activity> update(UUID recordId, UUID id, ActivityUpdate request) {
+        return this.get(recordId, id)
+                .map(activity -> {
+                    request.getType().ifPresent(updateType -> activity.setType(updateType));
+                    return activity;
+                });
     }
 }
