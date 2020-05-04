@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -40,5 +40,16 @@ public class ActivityController {
                         .map(record -> service.create(record.getId(), request)))
                 .map(activity -> ResponseEntity.status(HttpStatus.CREATED).body(activity))
                 .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<Activity>> list(
+            @PathVariable UUID carId,
+            @PathVariable UUID recordId) {
+        return carService.get(carId)
+                .flatMap(car -> recordService.get(car, recordId)
+                        .map(record -> service.list(record.getId())))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
