@@ -128,4 +128,23 @@ public class MaintenanceRecordControllerTest {
                 });
     }
 
+    @Test
+    public void shouldDeleteExistingMaintenanceRecord() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
+        MaintenanceRecord record1 = service.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        this.mockMvc.perform(delete(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isAccepted());
+        assertThat(service.get(car, record1.getId())).isEmpty();
+    }
+
+    @Test
+    public void shouldNotDeleteNonExistingMaintenanceRecord() throws Exception {
+        this.mockMvc.perform(delete(String.format("/cars/%s/mrs/%s", UUID.randomUUID(), UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
 }

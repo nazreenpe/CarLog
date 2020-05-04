@@ -61,4 +61,16 @@ public class MaintenanceRecordController {
                 .map(car -> ResponseEntity.ok(service.update(car, id, update)))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity delete(
+            @PathVariable UUID carId,
+            @PathVariable UUID id) {
+        return carService.get(carId)
+                .map(car -> {
+                    service.delete(car, id);
+                    return ResponseEntity.accepted().build();
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
