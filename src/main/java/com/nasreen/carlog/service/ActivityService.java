@@ -37,10 +37,7 @@ public class ActivityService {
     }
 
     public Optional<Activity> get(UUID recordId, UUID id) {
-        return activities.stream()
-                .filter(activity -> activity.getRecordId().equals(recordId) &&
-                        activity.getId().equals(id))
-                .findFirst();
+        return repository.findById(recordId, id);
     }
 
     public Optional<Activity> update(UUID recordId, UUID id, ActivityUpdate request) {

@@ -16,6 +16,12 @@ public class Activity {
         this.id = UUID.randomUUID();
     }
 
+    public Activity(UUID id, ActivityType type, UUID recordId) {
+        this.id = id;
+        this.type = type;
+        this.recordId = recordId;
+    }
+
     public ActivityType getType() {
         return type;
     }
