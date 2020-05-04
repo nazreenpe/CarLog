@@ -26,8 +26,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,13 +55,13 @@ class ActivityControllerTest {
         this.mockMvc.perform(post(String.format("/cars/%s/mrs/%s/as", car.getId(), record.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(Map.of("type", "TIRE_ROTATION"))))
-        .andDo(print())
-        .andExpect(status().isCreated())
-        .andExpect(result -> {
-            Activity activity = objectMapper.readValue(result.getResponse().getContentAsByteArray(), Activity.class);
-            assertThat(activity.getId()).isNotNull();
-            assertThat(activity.getType()).isEqualTo(ActivityType.TIRE_ROTATION);
-        });
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(result -> {
+                    Activity activity = objectMapper.readValue(result.getResponse().getContentAsByteArray(), Activity.class);
+                    assertThat(activity.getId()).isNotNull();
+                    assertThat(activity.getType()).isEqualTo(ActivityType.TIRE_ROTATION);
+                });
     }
 
     @Test
@@ -88,7 +87,8 @@ class ActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     List<Activity> activities = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
-                            new TypeReference<>() {});
+                            new TypeReference<>() {
+                            });
                     assertThat(activities).usingFieldByFieldElementComparator()
                             .containsExactlyInAnyOrder(activity1, activity2, activity3);
                 });
@@ -131,4 +131,36 @@ class ActivityControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void shouldUpdateAnActivityForExistingRecord() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "Prius", 2020, "XLE"));
+        MaintenanceRecord record = recordService.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        Activity activity = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION));
+        ActivityType updatedType = ActivityType.OIL_CHANGE;
+        this.mockMvc.perform(put(String.format("/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), activity.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(Map.of("type", updatedType))))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    Activity updatedActivity = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                            Activity.class);
+                    assertThat(updatedActivity.getType()).isEqualTo(updatedType);
+                });
+    }
+
+
+    @Test
+    public void shouldNotUpdateAnNonExistingActivity() throws Exception {
+        Car car = carService.create(new CarCreateRequest("Toyota", "Prius", 2020, "XLE"));
+        MaintenanceRecord record = recordService.create(new MaintenanceRecordCreateRequest(LocalDate.now()), car);
+        ActivityType updatedType = ActivityType.OIL_CHANGE;
+        this.mockMvc.perform(put(String.format("/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(Map.of("type", updatedType))))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
 }

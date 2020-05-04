@@ -2,6 +2,7 @@ package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.model.Activity;
 import com.nasreen.carlog.request.ActivityCreate;
+import com.nasreen.carlog.request.ActivityUpdate;
 import com.nasreen.carlog.service.ActivityService;
 import com.nasreen.carlog.service.CarService;
 import com.nasreen.carlog.service.MaintenanceRecordService;
@@ -61,6 +62,20 @@ public class ActivityController {
         return carService.get(carId)
                 .flatMap(car -> recordService.get(car, recordId)
                         .flatMap(record -> service.get(record.getId(), id)))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Activity> update(
+            @PathVariable UUID carId,
+            @PathVariable UUID recordId,
+            @PathVariable UUID id,
+            @RequestBody ActivityUpdate request) {
+        return carService.get(carId)
+                .flatMap(car -> recordService.get(car, recordId)
+                        .flatMap(record -> service.update(record.getId(), id, request)))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
