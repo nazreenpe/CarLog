@@ -7,14 +7,12 @@ import com.nasreen.carlog.request.ActivityUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class ActivityService {
-    private List<Activity> activities = new ArrayList<>();
     private ActivityRepository repository;
 
     @Autowired
@@ -24,7 +22,6 @@ public class ActivityService {
 
     public Activity create(UUID recordId, ActivityCreate request) {
         Activity activity = new Activity(request.getType(), recordId);
-        activities.add(activity);
         repository.save(activity);
         return activity;
     }
@@ -46,10 +43,7 @@ public class ActivityService {
     }
 
     public Optional<UUID> delete(UUID recordId, UUID id) {
-        return this.get(recordId, id)
-                .map(activity -> {
-                    activities.remove(activity);
-                    return activity.getId();
-                });
+        return repository.findById(recordId, id)
+                .flatMap(activity -> repository.delete(id));
     }
 }

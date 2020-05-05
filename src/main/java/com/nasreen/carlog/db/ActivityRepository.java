@@ -20,6 +20,7 @@ public class ActivityRepository {
     public static final String INSERT_QUERY = String.format("INSERT INTO activities(id, type, record_id)  VALUES(:id, :type, :recordId)");
     public static final String SELECT_ALL_BY_ID = "SELECT * FROM activities WHERE record_id = :recordId";
     public static final String UPDATE = "UPDATE activities SET type = :type WHERE id = :id";
+    public static final String DELETE = "DELETE FROM activities WHERE id = :id";
     private Jdbi jdbi;
 
     @Autowired
@@ -66,5 +67,12 @@ public class ActivityRepository {
                 .bind("id", activity.getType())
                 .execute());
         return Optional.of(activity);
+    }
+
+    public Optional<UUID> delete(UUID id) {
+        jdbi.withHandle(handle -> handle.createUpdate(DELETE)
+                .bind("id", id.toString())
+                .execute());
+        return Optional.ofNullable(id);
     }
 }
