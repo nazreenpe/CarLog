@@ -3,18 +3,24 @@ package com.nasreen.carlog.model;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class MaintenanceRecord {
+public class Record {
     private UUID id;
     private LocalDate date;
     private UUID carId;
 
-    public MaintenanceRecord() {
+    public Record() {
     }
 
-    public MaintenanceRecord(LocalDate date, UUID carId) {
+    public Record(LocalDate date, UUID carId) {
         this.date = date;
         this.carId = carId;
         this.id = UUID.randomUUID();
+    }
+
+    public Record(UUID id, LocalDate date, UUID carId) {
+        this.id = id;
+        this.date = date;
+        this.carId = carId;
     }
 
     public UUID getId() {

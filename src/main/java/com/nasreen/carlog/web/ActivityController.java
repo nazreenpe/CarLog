@@ -5,7 +5,7 @@ import com.nasreen.carlog.request.ActivityCreate;
 import com.nasreen.carlog.request.ActivityUpdate;
 import com.nasreen.carlog.service.ActivityService;
 import com.nasreen.carlog.service.CarService;
-import com.nasreen.carlog.service.MaintenanceRecordService;
+import com.nasreen.carlog.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,10 +22,10 @@ import java.util.UUID;
 public class ActivityController {
     private ActivityService service;
     private final CarService carService;
-    private final MaintenanceRecordService recordService;
+    private final RecordService recordService;
 
     @Autowired
-    public ActivityController(ActivityService service, CarService carService, MaintenanceRecordService recordService) {
+    public ActivityController(ActivityService service, CarService carService, RecordService recordService) {
         this.service = service;
         this.carService = carService;
         this.recordService = recordService;

@@ -1,10 +1,10 @@
 package com.nasreen.carlog.web;
 
-import com.nasreen.carlog.model.MaintenanceRecord;
-import com.nasreen.carlog.request.MaintenanceRecordCreateRequest;
-import com.nasreen.carlog.request.MaintenanceRecordUpdate;
+import com.nasreen.carlog.model.Record;
+import com.nasreen.carlog.request.RecordCreateRequest;
+import com.nasreen.carlog.request.RecordUpdate;
 import com.nasreen.carlog.service.CarService;
-import com.nasreen.carlog.service.MaintenanceRecordService;
+import com.nasreen.carlog.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,44 +19,44 @@ import java.util.UUID;
 @RequestMapping(value = "/cars/{carId}/mrs",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-public class MaintenanceRecordController {
-    private final MaintenanceRecordService service;
+public class RecordController {
+    private final RecordService service;
     private final CarService carService;
 
     @Autowired
-    public MaintenanceRecordController(MaintenanceRecordService service, CarService carService) {
+    public RecordController(RecordService service, CarService carService) {
         this.service = service;
         this.carService = carService;
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<MaintenanceRecord> create(
+    public ResponseEntity<Record> create(
             @PathVariable UUID carId,
-            @RequestBody MaintenanceRecordCreateRequest request) {
+            @RequestBody RecordCreateRequest request) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.status(HttpStatus.CREATED).body(service.create(request, car)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<MaintenanceRecord>> list(@PathVariable UUID carId) {
+    public ResponseEntity<List<Record>> list(@PathVariable UUID carId) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.ok(service.list(car)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Optional<MaintenanceRecord>> get(@PathVariable UUID carId, @PathVariable UUID id) {
+    public ResponseEntity<Optional<Record>> get(@PathVariable UUID carId, @PathVariable UUID id) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.ok(service.get(car, id)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Optional<MaintenanceRecord>> update(
+    public ResponseEntity<Optional<Record>> update(
             @PathVariable UUID carId,
             @PathVariable UUID id,
-            @RequestBody MaintenanceRecordUpdate update) {
+            @RequestBody RecordUpdate update) {
         return carService.get(carId)
                 .map(car -> ResponseEntity.ok(service.update(car, id, update)))
                 .orElse(ResponseEntity.notFound().build());

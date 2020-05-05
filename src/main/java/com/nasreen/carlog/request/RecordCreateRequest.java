@@ -3,13 +3,13 @@ package com.nasreen.carlog.request;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class MaintenanceRecordCreateRequest {
+public class RecordCreateRequest {
     private LocalDate date;
 
-    public MaintenanceRecordCreateRequest() {
+    public RecordCreateRequest() {
     }
 
-    public MaintenanceRecordCreateRequest(LocalDate date) {
+    public RecordCreateRequest(LocalDate date) {
         this.date = date;
     }
 

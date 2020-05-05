@@ -2,7 +2,6 @@ package com.nasreen.carlog.db;
 
 import com.nasreen.carlog.model.Activity;
 import com.nasreen.carlog.model.ActivityType;
-import com.nasreen.carlog.request.ActivityUpdate;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.springframework.beans.factory.annotation.Autowired;

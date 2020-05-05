@@ -10,6 +10,9 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public class UserRepository {
+    private static final String DELETE_ALL = "DELETE FROM users";
+    public static final String INSERT_QUERY = "INSERT INTO users(id, username, email_id, is_admin, encrypted_password)" +
+            "  VALUES(:id, :username, :email_id, :is_admin, :encrypted_password)";
     private Jdbi jdbi;
 
     @Autowired
@@ -19,8 +22,7 @@ public class UserRepository {
 
     public User save(User user) {
         return jdbi.withHandle(handle -> {
-            handle.createUpdate("INSERT INTO users(id, username, email_id, is_admin, encrypted_password)" +
-                    "  VALUES(:id, :username, :email_id, :is_admin, :encrypted_password)")
+            handle.createUpdate(INSERT_QUERY)
                     .bind("id", user.getId())
                     .bind("username", user.getUsername())
                     .bind("email_id", user.getEmailId())
@@ -29,5 +31,9 @@ public class UserRepository {
                     .execute();
             return user;
         });
+    }
+
+    public void deleteAll() {
+        jdbi.withHandle(handle -> handle.createUpdate(DELETE_ALL).execute());
     }
 }
