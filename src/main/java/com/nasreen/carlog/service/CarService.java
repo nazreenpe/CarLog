@@ -6,14 +6,13 @@ import com.nasreen.carlog.request.CarCreateRequest;
 import com.nasreen.carlog.request.CarUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CarService {
-    private List<Car> cars = new ArrayList<>();
     private CarRepository repository;
 
     @Autowired
@@ -27,35 +26,29 @@ public class CarService {
     }
 
     public Optional<Car> get(UUID id) {
-        return cars.stream()
-                .filter(car -> car.getId().equals(id))
-                .findFirst();
+        return repository.findById(id);
     }
 
     public Optional<UUID> delete(UUID id) {
-        return get(id)
-                .map(car -> {
-                    cars.remove(car);
-                    return id;
-                });
+        return repository.findById(id).flatMap(car -> repository.delete(id));
     }
 
     public Optional<Car> update(UUID id, CarUpdateRequest request) {
-        return get(id)
-                .map(car -> {
+        return repository.findById(id)
+                .flatMap(car -> {
                     request.getTrim().ifPresent(car::setTrim);
                     request.getMake().ifPresent(car::setMake);
                     request.getModel().ifPresent(car::setModel);
                     request.getYear().ifPresent(car::setYear);
-                    return car;
+                    return repository.update(car);
                 });
     }
 
     public void deleteAll() {
-        cars.clear();
+        repository.deleteAll();
     }
 
     public List<Car> list() {
-        return cars;
+        return repository.list();
     }
 }
