@@ -20,6 +20,14 @@ public class Car {
         this.trim = trim;
     }
 
+    public Car(UUID id, String make, String model, int year, String trim) {
+        this.id = id;
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.trim = trim;
+    }
+
     public String getMake() {
         return make;
     }
