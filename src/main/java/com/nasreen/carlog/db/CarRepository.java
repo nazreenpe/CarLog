@@ -17,9 +17,11 @@ public class CarRepository {
     public static final String SELECT_QUERY = "SELECT * FROM cars WHERE id = :id";
     public static final String INSERT_QUERY = "INSERT INTO cars(id, make, model, year, trim)" +
             "  VALUES(:id, :make, :model, :year, :trim)";
-    public static final String SELECT_ALL_BY_ID = "SELECT * FROM cars WHERE record_id = :recordId";
-    public static final String UPDATE = "UPDATE cars SET type = :type WHERE id = :id";
+    public static final String SELECT_ALL = "SELECT * FROM cars";
+    public static final String UPDATE = "UPDATE cars SET make = :make, model = :model, " +
+            "year = :year, trim = :trim WHERE id = :id";
     public static final String DELETE = "DELETE FROM cars WHERE id = :id";
+    public static final String DELETE_ALL = "DELETE FROM cars";
     private Jdbi jdbi;
 
     @Autowired
@@ -40,28 +42,18 @@ public class CarRepository {
         });
     }
 
-    public Optional<Car> findById(UUID recordId, UUID id) {
+    public Optional<Car> findById(UUID id) {
         return jdbi.withHandle(handle -> handle.createQuery(SELECT_QUERY)
-                .bind("recordId", recordId.toString())
                 .bind("id", id.toString())
                 .map(carRowMapper())
                 .findFirst());
     }
 
-    public List<Car> list(UUID recordId) {
-        return jdbi.withHandle(handle -> handle.createQuery(SELECT_ALL_BY_ID)
-                .bind("recordId", recordId.toString())
+    public List<Car> list() {
+        return jdbi.withHandle(handle -> handle.createQuery(SELECT_ALL)
                 .map(carRowMapper())
                 .list()
                 );
-    }
-
-    private RowMapper<Car> carRowMapper() {
-        return (rs, ctx) -> new Car(UUID.fromString(rs.getString("id")),
-                rs.getString("make"),
-                rs.getString("model"),
-                rs.getInt("year"),
-                rs.getString("trim"));
     }
 
     public Optional<Car> update(Car car) {
@@ -80,5 +72,17 @@ public class CarRepository {
                 .bind("id", id.toString())
                 .execute());
         return Optional.ofNullable(id);
+    }
+
+    public void deleteAll() {
+        jdbi.withHandle(handle -> handle.createUpdate(DELETE_ALL).execute());
+    }
+
+    private RowMapper<Car> carRowMapper() {
+        return (rs, ctx) -> new Car(UUID.fromString(rs.getString("id")),
+                rs.getString("make"),
+                rs.getString("model"),
+                rs.getInt("year"),
+                rs.getString("trim"));
     }
 }

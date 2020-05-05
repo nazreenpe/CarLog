@@ -55,12 +55,6 @@ public class ActivityRepository {
                 );
     }
 
-    private RowMapper<Activity> activityRowMapper() {
-        return (rs, ctx) -> new Activity(UUID.fromString(rs.getString("id")),
-                ActivityType.valueOf(rs.getString("type")),
-                UUID.fromString(rs.getString("record_id")));
-    }
-
     public Optional<Activity> update(Activity activity) {
         jdbi.withHandle(handle -> handle.createUpdate(UPDATE)
                 .bind("type", activity.getType())
@@ -74,5 +68,11 @@ public class ActivityRepository {
                 .bind("id", id.toString())
                 .execute());
         return Optional.ofNullable(id);
+    }
+
+    private RowMapper<Activity> activityRowMapper() {
+        return (rs, ctx) -> new Activity(UUID.fromString(rs.getString("id")),
+                ActivityType.valueOf(rs.getString("type")),
+                UUID.fromString(rs.getString("record_id")));
     }
 }
