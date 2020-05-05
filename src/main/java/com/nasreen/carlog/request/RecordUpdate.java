@@ -3,14 +3,14 @@ package com.nasreen.carlog.request;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class MaintenanceRecordUpdate {
+public class RecordUpdate {
     private Optional<LocalDate> date;
 
-    public MaintenanceRecordUpdate() {
+    public RecordUpdate() {
         this.date = Optional.empty();
     }
 
-    public MaintenanceRecordUpdate(Optional<LocalDate> date) {
+    public RecordUpdate(Optional<LocalDate> date) {
         this.date = date;
     }
 

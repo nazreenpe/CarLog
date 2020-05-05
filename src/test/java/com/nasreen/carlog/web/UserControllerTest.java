@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.model.User;
 import com.nasreen.carlog.request.UserCreateRequest;
+import com.nasreen.carlog.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,6 +29,14 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserService service;
+
+    @BeforeEach
+    public void setup(){
+        service.deleteAll();
+    }
+
     @Test
     public void shouldCreateUserWithRightParams() throws Exception {
         UserCreateRequest createRequest = new UserCreateRequest(
@@ -42,7 +52,6 @@ class UserControllerTest {
                     assertThat(createdUser.getIsAdmin()).isEqualTo(false);
                     assertThat(createdUser.getUsername()).isEqualTo("mocking_bird");
                     assertThat(createdUser.getEmailId()).isEqualTo("bird_123@gmail.com");
-//                    assertThat(createdUser.getPassword()).isEqualTo(2018);
                 });
     }
 }

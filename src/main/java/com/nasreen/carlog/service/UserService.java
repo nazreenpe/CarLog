@@ -27,4 +27,8 @@ public class UserService {
         repository.save(user);
         return user;
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }
