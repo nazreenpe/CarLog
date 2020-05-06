@@ -2,14 +2,9 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
-
-.App-header {
-  background-color: rgb(234, 234, 238);
+.page-body {
+  background-color:  white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

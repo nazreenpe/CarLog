@@ -1,0 +1,19 @@
+.header {
+    font-family: 'Josefin Sans', sans-serif;
+    text-align: center;
+    overflow: hidden;
+    margin: 10px;
+    padding: 10px;
+    background-color: #2d545e;
+    color: white;
+}
+
+.header h1{
+    font-weight: 900;
+    font-size: 50px;
+    float: left;
+}
+
+#login-button {
+    float: right;
+}

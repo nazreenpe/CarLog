@@ -1,5 +1,4 @@
 import React from 'react';
-import CarDetails from './CarDetails';
 
 class CarForm extends React.Component {
     constructor(props) {
@@ -7,7 +6,10 @@ class CarForm extends React.Component {
         this.state = {
             value: props.startValue,
             hasSubmitted: false,
-            carId: undefined
+            make:'',
+            model:'',
+            year:null,
+            trim:''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -17,7 +19,9 @@ class CarForm extends React.Component {
     handleChange(event) {
         console.log("Setting value to", event.target.value);
 
-        this.setState({ value: event.target.value });
+        let name = event.target.name;
+        let value = event.target.value;
+        this.setState({ [name]: value });
     }
 
     handleSubmit(event) {
@@ -28,20 +32,40 @@ class CarForm extends React.Component {
     }
 
     render() {
-        console.log("CarForm render has been called");
-        // depending on ajax call, can have if-else conditions giving different
-        // results, including CarDetails
-        if (this.state.carId) {
-            return <CarDetails id={this.state.carId}/>
-        }
+
         if (this.state.hasSubmitted) {
-            return <p>Form Submitted successfully (without Ajax ;)</p>
+            return <p>Your Car is added successfully</p>
         }
+
         return (
             <form onSubmit={this.handleSubmit}>
                 <label>
-                    Name:
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
+                    Make:
+            <input
+                        type="text"
+                        name="make"
+                        onChange={this.handleChange} />
+                </label>
+                <label>
+                    Model:
+            <input
+                        type="text"
+                        name="model"
+                        onChange={this.handleChange} />
+                </label>
+                <label>
+                    Year:
+            <input
+                        type="text"
+                        name="year"
+                        onChange={this.handleChange} />
+                </label>
+                <label>
+                    Trim:
+            <input
+                        type="text"
+                        name="trim"
+                        onChange={this.handleChange} />
                 </label>
                 <input type="submit" value="Submit" />
             </form>
