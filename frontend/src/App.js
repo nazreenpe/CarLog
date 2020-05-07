@@ -16,7 +16,7 @@ function App() {
 
       <div className="page-body">
         <p>
-          Welcome to CarLog
+          Welcome to CarLog!
         </p>
         <CarForm startValue="No cars Yet!"></CarForm>
         <Record/>

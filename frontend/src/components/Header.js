@@ -7,9 +7,11 @@ class Header extends React.Component {
         return (
             <div className="header">
                 <h1>CarLog</h1>
+                <a href="#">
                 <Button id="login-button" color="primary" size="lg">
                     Login
                 </Button>
+                </a>
             </div>
         );
     }

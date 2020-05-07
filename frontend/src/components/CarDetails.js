@@ -7,10 +7,10 @@ class CarDetails extends React.Component {
         this.state = {
             // props.id came from the value we gave in App.js
             id: props.id,
-            make: "Loading",
-            model: "Loading",
-            year: "Loading",
-            trim: "Loading",
+            make:'',
+            model:'',
+            year:null,
+            trim:'',
             hasLoaded: false
         };
 
