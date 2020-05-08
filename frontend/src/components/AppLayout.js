@@ -191,7 +191,10 @@ class MobileContainer extends Component {
                 </Menu.Item>
               </Menu>
             </Container>
-            <HomepageHeading mobile />
+            <Route path="/home" render={props => <HomepageHeading mobile/>} />
+            <Route path="/" exact render={props => <HomepageHeading mobile/>} />
+            <Route path="/login" component={LoginForm} />
+            <Route path="/signup" component={SignupForm} />
           </Segment>
 
           {children}
