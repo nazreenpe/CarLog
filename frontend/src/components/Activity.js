@@ -22,7 +22,6 @@ class Activity extends React.Component {
 
         return (
             <Select
-                maxMenuHeight={40}
                 value={selectedOption}
                 onChange={this.handleChange}
                 options={options}
