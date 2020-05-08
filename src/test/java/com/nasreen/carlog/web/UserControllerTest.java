@@ -42,7 +42,7 @@ class UserControllerTest {
         UserCreateRequest createRequest = new UserCreateRequest(
                 "mocking_bird", "bird_123@gmail.com", "password"
         );
-        this.mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createRequest)))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())

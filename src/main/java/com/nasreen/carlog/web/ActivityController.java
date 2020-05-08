@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/cars/{carId}/mrs/{recordId}/as",
+@RequestMapping(value = "/api/cars/{carId}/mrs/{recordId}/as",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class ActivityController {

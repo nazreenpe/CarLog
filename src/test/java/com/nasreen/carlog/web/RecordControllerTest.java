@@ -45,7 +45,7 @@ public class RecordControllerTest {
     public void shouldCreateMaintenanceRecordWithRightParams() throws Exception {
         Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
         RecordCreateRequest request = new RecordCreateRequest(LocalDate.now());
-        this.mockMvc.perform(post(String.format("/cars/%s/mrs", car.getId()))
+        this.mockMvc.perform(post(String.format("/api/cars/%s/mrs", car.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(request)))
                 .andDo(print())
@@ -61,7 +61,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldNotCreateMaintenanceRecordForNonExistingCars() throws Exception {
-        this.mockMvc.perform(post(String.format("/cars/%s/mrs", UUID.randomUUID()))
+        this.mockMvc.perform(post(String.format("/api/cars/%s/mrs", UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("date", LocalDate.now()))))
                 .andDo(print())
@@ -73,7 +73,7 @@ public class RecordControllerTest {
         Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         Record record2 = service.create(new RecordCreateRequest(LocalDate.now()), car);
-        this.mockMvc.perform(get(String.format("/cars/%s/mrs", car.getId()))
+        this.mockMvc.perform(get(String.format("/api/cars/%s/mrs", car.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -91,7 +91,7 @@ public class RecordControllerTest {
     public void shouldFetchExistingMaintenanceRecord() throws Exception {
         Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
-        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId()))
+        this.mockMvc.perform(get(String.format("/api/cars/%s/mrs/%s", car.getId(), record1.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -105,7 +105,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldNotFetchNonExistingMaintenanceRecord() throws Exception {
-        this.mockMvc.perform(get(String.format("/cars/%s/mrs/%s", UUID.randomUUID(), UUID.randomUUID()))
+        this.mockMvc.perform(get(String.format("/api/cars/%s/mrs/%s", UUID.randomUUID(), UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -116,7 +116,7 @@ public class RecordControllerTest {
         Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         LocalDate newDate = LocalDate.now().plusDays(1);
-        this.mockMvc.perform(put(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId()))
+        this.mockMvc.perform(put(String.format("/api/cars/%s/mrs/%s", car.getId(), record1.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(Map.of("date", newDate))))
                 .andDo(print())
@@ -131,7 +131,7 @@ public class RecordControllerTest {
     public void shouldDeleteExistingMaintenanceRecord() throws Exception {
         Car car = carService.create(new CarCreateRequest("Toyota", "RAV4", 2018, "LE"));
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
-        this.mockMvc.perform(delete(String.format("/cars/%s/mrs/%s", car.getId(), record1.getId()))
+        this.mockMvc.perform(delete(String.format("/api/cars/%s/mrs/%s", car.getId(), record1.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isAccepted());
@@ -140,7 +140,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldNotDeleteNonExistingMaintenanceRecord() throws Exception {
-        this.mockMvc.perform(delete(String.format("/cars/%s/mrs/%s", UUID.randomUUID(), UUID.randomUUID()))
+        this.mockMvc.perform(delete(String.format("/api/cars/%s/mrs/%s", UUID.randomUUID(), UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());

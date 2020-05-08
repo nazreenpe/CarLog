@@ -36,7 +36,7 @@ class CarControllerTest {
     @Test
     public void shouldCreateCarWithRightParams() throws Exception {
         CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
-        this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/cars").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createRequest)))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
@@ -52,7 +52,7 @@ class CarControllerTest {
 
     @Test
     public void canNotCreateCarWhenTrimIsMissing() throws Exception {
-        this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/cars").contentType(MediaType.APPLICATION_JSON)
                 .content("{'make':'Toyota','model':'RAV4','year':1978}"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -60,7 +60,7 @@ class CarControllerTest {
 
     @Test
     public void canNotCreateCarWhenYearIsMissing() throws Exception {
-        this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/cars").contentType(MediaType.APPLICATION_JSON)
                 .content("{'make':'Toyota','model':'RAV4','trim':'LE'}"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -68,7 +68,7 @@ class CarControllerTest {
 
     @Test
     public void canNotCreateCarWhenModelIsMissing() throws Exception {
-        this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/cars").contentType(MediaType.APPLICATION_JSON)
                 .content("{'make':'Toyota','year':1978,'trim':'LE'}"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -76,7 +76,7 @@ class CarControllerTest {
 
     @Test
     public void canNotCreateCarWhenMakeIsMissing() throws Exception {
-        this.mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/api/cars").contentType(MediaType.APPLICATION_JSON)
                 .content("{'model':'RAV4','year':1978,'trim':'LE'}"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -86,7 +86,7 @@ class CarControllerTest {
     public void shouldFetchCarWithId() throws Exception {
         CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
-        this.mockMvc.perform(get(String.format("/cars/%s", createdCar.getId()))
+        this.mockMvc.perform(get(String.format("/api/cars/%s", createdCar.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
@@ -102,7 +102,7 @@ class CarControllerTest {
 
     @Test
     public void shouldNotFetchNonExistingCar() throws Exception {
-        this.mockMvc.perform(get(String.format("/cars/%s", UUID.randomUUID()))
+        this.mockMvc.perform(get(String.format("/api/cars/%s", UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -112,7 +112,7 @@ class CarControllerTest {
     public void shouldBeAbleToDeleteAnExistingCar() throws Exception {
         CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
-        this.mockMvc.perform(delete(String.format("/cars/%s", createdCar.getId()))
+        this.mockMvc.perform(delete(String.format("/api/cars/%s", createdCar.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
@@ -120,7 +120,7 @@ class CarControllerTest {
 
     @Test
     public void shouldNotDeleteNonExistingCar() throws Exception {
-        this.mockMvc.perform(delete(String.format("/cars/%s", UUID.randomUUID()))
+        this.mockMvc.perform(delete(String.format("/api/cars/%s", UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -130,7 +130,7 @@ class CarControllerTest {
     public void shouldUpdateExistingCar() throws Exception {
         CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
-        this.mockMvc.perform(put(String.format("/cars/%s", createdCar.getId()))
+        this.mockMvc.perform(put(String.format("/api/cars/%s", createdCar.getId()))
                 .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport",
                         "year", 2020)))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -148,7 +148,7 @@ class CarControllerTest {
 
     @Test
     public void shouldNotUpdateNonExistingCar() throws Exception {
-        this.mockMvc.perform(put(String.format("/cars/%s", UUID.randomUUID()))
+        this.mockMvc.perform(put(String.format("/api/cars/%s", UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport"))))
                 .andDo(print())
@@ -162,7 +162,7 @@ class CarControllerTest {
         Car createdCar1 = carService.create(createRequest1);
         CarCreateRequest createRequest2 = new CarCreateRequest("Toyota", "PRIUS", 2018, "LE");
         Car createdCar2 = carService.create(createRequest2);
-        this.mockMvc.perform(get("/cars")
+        this.mockMvc.perform(get("/api/cars")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

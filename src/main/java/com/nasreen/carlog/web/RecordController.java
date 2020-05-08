@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/cars/{carId}/mrs",
+@RequestMapping(value = "/api/cars/{carId}/mrs",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class RecordController {
