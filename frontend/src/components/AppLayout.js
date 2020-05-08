@@ -22,6 +22,9 @@ import {
   HashRouter
 } from "react-router-dom"
 
+import LoginForm from './LoginForm'
+import SignupForm from './SignupForm'
+
 // Heads up!
 // We using React Static to prerender our docs with server side rendering, this is a quite simple solution.
 // For more advanced usage please check Responsive docs under the "Usage" section.
@@ -119,6 +122,8 @@ class DesktopContainer extends Component {
             </Menu>
             <Route path="/home" component={HomepageHeading} />
             <Route path="/" exact component={HomepageHeading} />
+            <Route path="/login" component={LoginForm} />
+            <Route path="/signup" component={SignupForm} />
           </Segment>
         </Visibility>
 
