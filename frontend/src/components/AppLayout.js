@@ -16,6 +16,12 @@ import {
   Visibility,
 } from 'semantic-ui-react'
 
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from "react-router-dom"
+
 // Heads up!
 // We using React Static to prerender our docs with server side rendering, this is a quite simple solution.
 // For more advanced usage please check Responsive docs under the "Usage" section.
@@ -52,7 +58,7 @@ const HomepageHeading = ({ mobile }) => (
         marginTop: mobile ? '0.5em' : '1.5em',
       }}
     />
-    <Button primary size='huge'>
+    <Button primary size='huge' as={NavLink} to="/signup">
       Get Started
       <Icon name='right arrow' />
     </Button>
@@ -98,20 +104,21 @@ class DesktopContainer extends Component {
               size='large'
             >
               <Container>
-                <Menu.Item as='a' active>
+                <Menu.Item as={NavLink} to="/home" active>
                   Home
                 </Menu.Item>
                 <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
+                  <Button as={NavLink} to="/login" inverted={!fixed}>
                     Log in
                   </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                  <Button as={NavLink} to="/signup" inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
                     Sign Up
                   </Button>
                 </Menu.Item>
               </Container>
             </Menu>
-            <HomepageHeading />
+            <Route path="/home" component={HomepageHeading} />
+            <Route path="/" exact component={HomepageHeading} />
           </Segment>
         </Visibility>
 
@@ -150,11 +157,11 @@ class MobileContainer extends Component {
           vertical
           visible={sidebarOpened}
         >
-          <Menu.Item as='a' active>
+          <Menu.Item as={NavLink} to="/home" active>
             Home
           </Menu.Item>
-          <Menu.Item as='a'>Log in</Menu.Item>
-          <Menu.Item as='a'>Sign Up</Menu.Item>
+          <Menu.Item as={NavLink} to="/login">Log in</Menu.Item>
+          <Menu.Item as={NavLink} to="/signup">Sign Up</Menu.Item>
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -170,10 +177,10 @@ class MobileContainer extends Component {
                   <Icon name='sidebar' />
                 </Menu.Item>
                 <Menu.Item position='right'>
-                  <Button as='a' inverted>
+                  <Button as={NavLink} to="/login" inverted>
                     Log in
                   </Button>
-                  <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
+                  <Button as={NavLink} to="/signup" inverted style={{ marginLeft: '0.5em' }}>
                     Sign Up
                   </Button>
                 </Menu.Item>
@@ -205,24 +212,26 @@ ResponsiveContainer.propTypes = {
 }
 
 const AppLayout = () => (
-  <ResponsiveContainer>
-    <Segment inverted vertical style={{ padding: '5em 0em' }}>
-      <Container>
-        <Grid divided inverted stackable>
-          <Grid.Row>
-            <Grid.Column>
-              <Header as='h4' inverted>
-                Footer Header
+  <HashRouter>
+    <ResponsiveContainer>
+      <Segment inverted vertical style={{ padding: '5em 0em' }}>
+        <Container>
+          <Grid divided inverted stackable>
+            <Grid.Row>
+              <Grid.Column>
+                <Header as='h4' inverted>
+                  Footer Header
               </Header>
-              <p>
-                Extra space for a call to action inside the footer that could help re-engage users.
+                <p>
+                  Extra space for a call to action inside the footer that could help re-engage users.
               </p>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
-    </Segment>
-  </ResponsiveContainer>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Container>
+      </Segment>
+    </ResponsiveContainer>
+  </HashRouter>
 )
 
 export default AppLayout
