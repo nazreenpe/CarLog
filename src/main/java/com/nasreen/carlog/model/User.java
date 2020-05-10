@@ -2,6 +2,8 @@ package com.nasreen.carlog.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -44,6 +46,7 @@ public class User implements Serializable {
         return encryptedPassword;
     }
 
+    @JsonIgnore
     public Boolean getIsAdmin() {
         return isAdmin;
     }

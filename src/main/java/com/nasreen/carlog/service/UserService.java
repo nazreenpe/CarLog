@@ -22,7 +22,7 @@ public class UserService {
 
     public User create(UserCreateRequest request) {
         byte[] hashed = BCrypt.withDefaults().hash(10, request.getPassword().getBytes());
-        User user = new User(request.getUsername(), request.getEmailId(), hashed.toString());
+        User user = new User(request.getName(), request.getEmailId(), hashed.toString());
         users.add(user);
         repository.save(user);
         return user;
