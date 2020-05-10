@@ -11,8 +11,8 @@ import javax.transaction.Transactional;
 @Transactional
 public class UserRepository {
     private static final String DELETE_ALL = "DELETE FROM users";
-    public static final String INSERT_QUERY = "INSERT INTO users(id, username, email_id, is_admin, encrypted_password)" +
-            "  VALUES(:id, :username, :email_id, :is_admin, :encrypted_password)";
+    public static final String INSERT_QUERY = "INSERT INTO users(id, name, email_id, is_admin, encrypted_password)" +
+            "  VALUES(:id, :name, :email_id, :is_admin, :encrypted_password)";
     private Jdbi jdbi;
 
     @Autowired
@@ -24,7 +24,7 @@ public class UserRepository {
         return jdbi.withHandle(handle -> {
             handle.createUpdate(INSERT_QUERY)
                     .bind("id", user.getId())
-                    .bind("username", user.getUsername())
+                    .bind("name", user.getName())
                     .bind("email_id", user.getEmailId())
                     .bind("encrypted_password", user.getEncryptedPassword())
                     .bind("is_admin", user.getIsAdmin())

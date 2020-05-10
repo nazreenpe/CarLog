@@ -49,7 +49,7 @@ class UserControllerTest {
                     User createdUser = objectMapper.readValue(result.getResponse().getContentAsString(), User.class);
                     assertThat(createdUser.getId()).isNotNull();
                     assertThat(createdUser.getIsAdmin()).isEqualTo(false);
-                    assertThat(createdUser.getUsername()).isEqualTo("mocking_bird");
+                    assertThat(createdUser.getName()).isEqualTo("mocking_bird");
                     assertThat(createdUser.getEmailId()).isEqualTo("bird_123@gmail.com");
                 });
     }

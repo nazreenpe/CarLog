@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class User implements Serializable {
-    private String username;
+    private String name;
     private String emailId;
     private String encryptedPassword;
     private Boolean isAdmin;
@@ -15,24 +15,24 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String emailId, String encryptedPassword) {
-        this.username = username;
+    public User(String name, String emailId, String encryptedPassword) {
+        this.name = name;
         this.emailId = emailId;
         this.encryptedPassword = encryptedPassword;
         this.isAdmin = false;
         this.id = UUID.randomUUID();
     }
 
-    public User(UUID id, String username, String emailId, String encryptedPassword) {
-        this.username = username;
+    public User(UUID id, String name, String emailId, String encryptedPassword) {
+        this.name = name;
         this.emailId = emailId;
         this.encryptedPassword = encryptedPassword;
         this.isAdmin = false;
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public String getEmailId() {
@@ -52,8 +52,8 @@ public class User implements Serializable {
         return id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setEmailId(String emailId) {
