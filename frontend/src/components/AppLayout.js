@@ -139,7 +139,8 @@ DesktopContainer.propTypes = {
 
 class MobileContainer extends Component {
   state = {}
-
+// sidebar toggle and hide could be jst one function
+// default value for state (141) initialize in the beginning itself.
   handleSidebarHide = () => this.setState({ sidebarOpened: false })
 
   handleToggle = () => this.setState({ sidebarOpened: true })

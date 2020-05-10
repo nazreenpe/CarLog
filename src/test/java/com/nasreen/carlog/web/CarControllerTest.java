@@ -19,6 +19,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -174,5 +175,13 @@ class CarControllerTest {
                             .usingFieldByFieldElementComparator()
                             .containsExactly(createdCar1, createdCar2);
                 });
+    }
+
+    @Test
+    public void responseShouldHaveCookie() throws Exception {
+        this.mockMvc.perform(get("/api/cars")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(cookie().exists("SESSION"));
     }
 }
