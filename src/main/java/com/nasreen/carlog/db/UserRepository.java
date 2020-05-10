@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -20,16 +21,21 @@ public class UserRepository {
         this.jdbi = jdbi;
     }
 
-    public User save(User user) {
+    public Optional<User> save(User user) {
         return jdbi.withHandle(handle -> {
-            handle.createUpdate(INSERT_QUERY)
-                    .bind("id", user.getId())
-                    .bind("name", user.getName())
-                    .bind("email_id", user.getEmailId())
-                    .bind("encrypted_password", user.getEncryptedPassword())
-                    .bind("is_admin", user.getIsAdmin())
-                    .execute();
-            return user;
+            try {
+                handle.createUpdate(INSERT_QUERY)
+                        .bind("id", user.getId())
+                        .bind("name", user.getName())
+                        .bind("email_id", user.getEmailId())
+                        .bind("encrypted_password", user.getEncryptedPassword())
+                        .bind("is_admin", user.getIsAdmin())
+                        .execute();
+            } catch (Exception ignore) {
+                return Optional.empty();
+            }
+
+            return Optional.of(user);
         });
     }
 

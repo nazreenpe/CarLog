@@ -1,5 +1,6 @@
 package com.nasreen.carlog.web;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nasreen.carlog.WithMockAuthScope;
 import com.nasreen.carlog.model.User;
@@ -12,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,23 +37,5 @@ class UserControllerTest {
     @BeforeEach
     public void setup(){
         service.deleteAll();
-    }
-
-    @Test
-    public void shouldCreateUserWithRightParams() throws Exception {
-        UserCreateRequest createRequest = new UserCreateRequest(
-                "mocking_bird", "bird_123@gmail.com", "password"
-        );
-        this.mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(createRequest)))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(result -> {
-                    User createdUser = objectMapper.readValue(result.getResponse().getContentAsString(), User.class);
-                    assertThat(createdUser.getId()).isNotNull();
-                    assertThat(createdUser.getIsAdmin()).isEqualTo(false);
-                    assertThat(createdUser.getName()).isEqualTo("mocking_bird");
-                    assertThat(createdUser.getEmailId()).isEqualTo("bird_123@gmail.com");
-                });
     }
 }

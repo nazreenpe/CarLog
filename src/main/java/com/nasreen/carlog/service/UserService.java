@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,12 +21,11 @@ public class UserService {
         this.repository = repository;
     }
 
-    public User create(UserCreateRequest request) {
+    public Optional<User> create(UserCreateRequest request) {
         byte[] hashed = BCrypt.withDefaults().hash(10, request.getPassword().getBytes());
         User user = new User(request.getName(), request.getEmailId(), hashed.toString());
         users.add(user);
-        repository.save(user);
-        return user;
+        return repository.save(user);
     }
 
     public void deleteAll() {

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping(
@@ -26,7 +28,7 @@ public class AuthController {
     }
 
     @RequestMapping("/signup")
-    public User create(@Validated @RequestBody UserCreateRequest createRequest){
+    public Optional<User> create(@Validated @RequestBody UserCreateRequest createRequest){
         return this.service.create(createRequest);
     }
 }
