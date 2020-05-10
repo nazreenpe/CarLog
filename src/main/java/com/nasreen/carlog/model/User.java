@@ -2,9 +2,10 @@ package com.nasreen.carlog.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private String username;
     private String emailId;
     private String encryptedPassword;
@@ -20,6 +21,14 @@ public class User {
         this.encryptedPassword = encryptedPassword;
         this.isAdmin = false;
         this.id = UUID.randomUUID();
+    }
+
+    public User(UUID id, String username, String emailId, String encryptedPassword) {
+        this.username = username;
+        this.emailId = emailId;
+        this.encryptedPassword = encryptedPassword;
+        this.isAdmin = false;
+        this.id = id;
     }
 
     public String getUsername() {

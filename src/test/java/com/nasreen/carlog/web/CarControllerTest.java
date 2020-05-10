@@ -2,6 +2,7 @@ package com.nasreen.carlog.web;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nasreen.carlog.WithMockAuthScope;
 import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.request.CarCreateRequest;
 import com.nasreen.carlog.service.CarService;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@WithMockAuthScope
 @AutoConfigureMockMvc
 class CarControllerTest {
     @Autowired

@@ -1,8 +1,7 @@
 package com.nasreen.carlog.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nasreen.carlog.model.Car;
+import com.nasreen.carlog.WithMockAuthScope;
 import com.nasreen.carlog.model.User;
 import com.nasreen.carlog.request.UserCreateRequest;
 import com.nasreen.carlog.service.UserService;
@@ -15,13 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockAuthScope
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
