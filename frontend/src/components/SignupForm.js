@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment, Label } from 'semantic-ui-react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect} from 'react-router-dom'
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -64,13 +64,18 @@ class SignupForm extends React.Component {
         }
         return res.json()
       })
-      .then(res => console.log(res))
+      .then(res => {
+        localStorage.setItem("currentUser", JSON.stringify(res))
+      })
       .catch(error => {
         this.setState({ signupError: true })
       });
   }
 
   render() {
+    if(localStorage.getItem('currentUser')) {
+      return <Redirect to="/dashboard"></Redirect>
+    }
     return (
       <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }}>
