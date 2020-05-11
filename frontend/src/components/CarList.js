@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Card} from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom'
 
-
 class CarList extends Component {
   constructor(props) {
     super(props)

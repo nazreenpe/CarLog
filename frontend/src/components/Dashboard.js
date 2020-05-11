@@ -16,7 +16,7 @@ Segment,
 Label } from 'semantic-ui-react'
 import Logout from './Logout.js'
 import CarList from './CarList.js'
-
+import CarDetails from './CarDetails.js'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -52,7 +52,9 @@ class Dashboard extends Component {
         <Container style={{ marginTop: '7em' }}>
           <HashRouter>
             <Route exact path="/dashboard" component={CarList} />
-            <Route exact path="/dashboard/cars/*" render = {(props) => (<div> Individual car</div>)} />
+            <Route exact path="/dashboard/cars/:id" render = {props =>
+              <CarDetails id={props.match.params.id}/>
+            } />
           </HashRouter>
         </Container>
       </div>

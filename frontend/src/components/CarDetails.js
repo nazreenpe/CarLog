@@ -1,42 +1,56 @@
 import React from 'react';
-import axios from 'axios';
+import { Container, Grid, Header } from 'semantic-ui-react'
+
 
 class CarDetails extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            // props.id came from the value we gave in App.js
-            id: props.id,
-            make:'',
-            model:'',
-            year:null,
-            trim:'',
-            hasLoaded: false
-        };
-
-        axios.get(`/cars/${props.id}`, null, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(res => {
-                const carDetails = res.data;
-                this.setState({ ...carDetails });
-            })
-
+      super(props);
+      console.log(props)
+      this.state = {
+        id: props.id,
+        car: {},
+        hasLoaded: false
+      };
     }
 
+   componentDidMount() {
+       fetch("/api/cars/" + this.state.id, {
+         method: "GET",
+         headers: {
+           "Content-Type": "application/json",
+           "Accept": "application/json"
+         }
+       })
+       .then(res => {
+           if (!res.ok) {
+             throw new Error()
+           }
+           return res.json()
+       })
+       .then(car => {
+         this.setState({car: car, hasLoaded: true})
+         console.log(car)
+       })
+     }
+
     render() {
-        return <dl>
-            <dt>make</dt>
-            <dd>{this.state.make}</dd>
-            <dt>model</dt>
-            <dd>{this.state.model}</dd>
-            <dt>year</dt>
-            <dd>{this.state.year}</dd>
-            <dt>trim</dt>
-            <dd>{this.state.trim}</dd>
-        </dl>
+        return (
+          <Container>
+          <Header as="h1">{this.state.car.make + " " + this.state.car.model}</Header>
+          <Header as="h2">{this.state.car.year + " " + this.state.car.trim}</Header>
+           <Grid divided='vertically'>
+              <Grid.Row columns={1}>
+                <Grid.Column> Record 1 </Grid.Column>
+              </Grid.Row>
+              <Grid.Row columns={1}>
+                <Grid.Column> Record 2 </Grid.Column>
+              </Grid.Row>
+              <Grid.Row columns={1}>
+                <Grid.Column> Record 3 </Grid.Column>
+              </Grid.Row>
+           </Grid>
+          </Container>
+        )
     }
 }
 
