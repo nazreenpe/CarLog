@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom'
 import {
-  Button, Form, Grid, Header, Image, Message, Segment, Label
+  Button, Form, Grid, Header, Image, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
 
 class CarForm extends React.Component {
@@ -30,12 +30,10 @@ class CarForm extends React.Component {
   }
 
   handleSubmit(event) {
-    // alert('A name was submitted: ' + this.state.value);
-    //   ajax call to backEnd
     this.setState({ hasSubmitted: true });
 
     fetch("/api/cars", {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -70,45 +68,56 @@ class CarForm extends React.Component {
     }
 
     return (
-      <Grid textAlign='left' style={{ height: '100vh' }}>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <Form size='large' onSubmit={this.handleSubmit}>
-            <Segment stacked>
-              <Form.Input fluid icon='factory'
-                iconPosition='left'
-                placeholder='Make'
-                name="make"
-                onChange={this.handleChange}
-                error={this.state.failedToCreate}
-              />
-              <Form.Input fluid icon='car'
-                iconPosition='left'
-                placeholder='Model'
-                name="model"
-                onChange={this.handleChange}
-                error={this.state.failedToCreate}
-              />
-              <Form.Input fluid icon='car'
-                iconPosition='left'
-                placeholder='Year'
-                name="year"
-                onChange={this.handleChange}
-                error={this.state.failedToCreate}
-              />
-              <Form.Input fluid icon='car'
-                iconPosition='left'
-                placeholder='Trim' 
-                name="trim"
-                onChange={this.handleChange}
-                error={this.state.failedToCreate}
+      <Container>
+        <Button content="Back to cars"
+          icon="left arrow"
+          labelPosition='left'
+          as={NavLink}
+          to="/dashboard"
+          push={true}
+        />
+        <Divider />
+        <Grid textAlign='left' style={{ height: '100vh' }}>
+          <Grid.Column style={{ maxWidth: 450 }}>
+            <Form size='large' onSubmit={this.handleSubmit}>
+              <Segment stacked>
+                <Form.Input fluid icon='factory'
+                  iconPosition='left'
+                  placeholder='Make'
+                  name="make"
+                  onChange={this.handleChange}
+                  error={this.state.failedToCreate}
                 />
-              <Button color='teal' fluid size='large'>
-                Go
+                <Form.Input fluid icon='car'
+                  iconPosition='left'
+                  placeholder='Model'
+                  name="model"
+                  onChange={this.handleChange}
+                  error={this.state.failedToCreate}
+                />
+                <Form.Input fluid icon='car'
+                  iconPosition='left'
+                  placeholder='Year'
+                  name="year"
+                  onChange={this.handleChange}
+                  error={this.state.failedToCreate}
+                />
+                <Form.Input fluid icon='car'
+                  iconPosition='left'
+                  placeholder='Trim'
+                  name="trim"
+                  onChange={this.handleChange}
+                  error={this.state.failedToCreate}
+                />
+                <Button color='teal' fluid size='large'>
+                  Go
               </Button>
-            </Segment>
-          </Form>
-        </Grid.Column>
-      </Grid>
+              </Segment>
+            </Form>
+          </Grid.Column>
+        </Grid>
+
+      </Container>
 
     );
   }
