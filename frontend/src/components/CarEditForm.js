@@ -18,11 +18,14 @@ class CarEditForm extends React.Component {
       trim: '',
       updatedCar: null,
       carToEdit: {},
-      failedToCreate: false
+      failedToCreate: false,
+      carDeleted: false,
+      failedToDelete: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   componentDidMount() {
@@ -92,20 +95,54 @@ class CarEditForm extends React.Component {
     event.preventDefault();
   }
 
-  render() {
+  delete() {
+    fetch("/api/cars/" + this.state.carToEdit.id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error()
+        }
+        return res.json()
+      })
+      .then(res => {
+        this.setState({ carDeleted: true })
+        console.log(res)
+      })
+      .catch(error => {
+        this.setState({ failedToDelete: true })
+      })
+  }
 
+  render() {
     if (this.state.updatedCar) {
       return <Redirect to={"/dashboard/cars/" + this.state.updatedCar.id} />
     }
 
+    if(this.state.carDeleted) {
+      return <Redirect to={"/dashboard/"} />
+    }
+
     return (
       <Container>
-        <Button content={"Back"}
+        <Button
+          content={"Back"}
           icon="left arrow"
           labelPosition='left'
           as={NavLink}
           to={"/dashboard/cars/" + this.state.id}
           push={true}
+        />
+
+        <Button content={"Delete"}
+          negative
+          icon="trash"
+          labelPosition='left'
+          onClick={this.delete}
         />
         <Divider />
         <Grid textAlign='left' style={{ height: '100vh' }}>
