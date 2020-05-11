@@ -17,6 +17,7 @@ Label } from 'semantic-ui-react'
 import Logout from './Logout.js'
 import CarList from './CarList.js'
 import CarDetails from './CarDetails.js'
+import CarForm from './CarForm.js'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -53,7 +54,9 @@ class Dashboard extends Component {
           <HashRouter>
             <Route exact path="/dashboard" component={CarList} />
             <Route exact path="/dashboard/cars/:id" render = {props =>
-              <CarDetails id={props.match.params.id}/>
+              props.match.params.id === 'new'
+              ? <CarForm />
+              : <CarDetails id={props.match.params.id}/>
             } />
           </HashRouter>
         </Container>

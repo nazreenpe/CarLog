@@ -1,92 +1,117 @@
 import React from 'react';
+import { Redirect, NavLink } from 'react-router-dom'
+import {
+  Button, Form, Grid, Header, Image, Message, Segment, Label
+} from 'semantic-ui-react'
 
 class CarForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: props.startValue,
-            hasSubmitted: false,
-            make:'',
-            model:'',
-            year:null,
-            trim:''
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.startValue,
+      hasSubmitted: false,
+      make: '',
+      model: '',
+      year: null,
+      trim: '',
+      createdCar: null,
+      failedToCreate: false
+    };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-    handleChange(event) {
-        console.log("Setting value to", event.target.value);
+  handleChange(event, input) {
+    console.log("Setting value to", event.target.value);
+    let name = event.target.name;
+    let value = event.target.value;
+    this.setState({ [name]: value });
+  }
 
-        let name = event.target.name;
-        let value = event.target.value;
-        this.setState({ [name]: value });
-    }
+  handleSubmit(event) {
+    // alert('A name was submitted: ' + this.state.value);
+    //   ajax call to backEnd
+    this.setState({ hasSubmitted: true });
 
-    async handleSubmit(event) {
-        // alert('A name was submitted: ' + this.state.value);
-        //   ajax call to backEnd
-        this.setState({ hasSubmitted: true });
-
-        const response = await fetch("http://localhost:8080/cars", {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-                "make": this.state.make,
-                "model": this.state.model,
-                "year": this.state.year,
-                "trim": this.state.trim
-
-            }) // body data type must match "Content-Type" header
-          });
-
-        event.preventDefault();
-    }
-
-    render() {
-        if (this.state.hasSubmitted) {
-            return <p>Your Car is added successfully { this.state.model }</p>
+    fetch("/api/cars", {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        "make": this.state.make,
+        "model": this.state.model,
+        "year": this.state.year,
+        "trim": this.state.trim
+      })
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error()
         }
+        return res.json()
+      })
+      .then(car => {
+        this.setState({ createdCar: car })
+        console.log(car)
+      })
+      .catch(error => {
+        this.setState({ failedToCreate: true })
+      })
 
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Make:
-            <input
-                        type="text"
-                        name="make"
-                        onChange={this.handleChange} />
-                </label>
-                <label>
-                    Model:
-            <input
-                        type="text"
-                        name="model"
-                        onChange={this.handleChange} />
-                </label>
-                <label>
-                    Year:
-            <input
-                        type="text"
-                        name="year"
-                        onChange={this.handleChange} />
-                </label>
-                <label>
-                    Trim:
-            <input
-                        type="text"
-                        name="trim"
-                        onChange={this.handleChange} />
-                </label>
-                <input type="submit" value="Submit" />
-            </form>
-        );
+    event.preventDefault();
+  }
+
+  render() {
+    if (this.state.createdCar) {
+      return <Redirect to={"/dashboard/cars/" + this.state.createdCar.id} />
     }
+
+    return (
+      <Grid textAlign='left' style={{ height: '100vh' }}>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Form size='large' onSubmit={this.handleSubmit}>
+            <Segment stacked>
+              <Form.Input fluid icon='factory'
+                iconPosition='left'
+                placeholder='Make'
+                name="make"
+                onChange={this.handleChange}
+                error={this.state.failedToCreate}
+              />
+              <Form.Input fluid icon='car'
+                iconPosition='left'
+                placeholder='Model'
+                name="model"
+                onChange={this.handleChange}
+                error={this.state.failedToCreate}
+              />
+              <Form.Input fluid icon='car'
+                iconPosition='left'
+                placeholder='Year'
+                name="year"
+                onChange={this.handleChange}
+                error={this.state.failedToCreate}
+              />
+              <Form.Input fluid icon='car'
+                iconPosition='left'
+                placeholder='Trim' 
+                name="trim"
+                onChange={this.handleChange}
+                error={this.state.failedToCreate}
+                />
+              <Button color='teal' fluid size='large'>
+                Go
+              </Button>
+            </Segment>
+          </Form>
+        </Grid.Column>
+      </Grid>
+
+    );
+  }
 }
 
 export default CarForm;
