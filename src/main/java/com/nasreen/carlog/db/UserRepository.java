@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @Transactional
@@ -14,6 +15,7 @@ public class UserRepository {
     private static final String DELETE_ALL = "DELETE FROM users";
     public static final String INSERT_QUERY = "INSERT INTO users(id, name, email_id, is_admin, encrypted_password)" +
             "  VALUES(:id, :name, :email_id, :is_admin, :encrypted_password)";
+    public static final String SELECT = "SELECT * FROM users where email_id = :email_id";
     private Jdbi jdbi;
 
     @Autowired
@@ -41,5 +43,17 @@ public class UserRepository {
 
     public void deleteAll() {
         jdbi.withHandle(handle -> handle.createUpdate(DELETE_ALL).execute());
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return jdbi.withHandle(handle -> handle.createQuery(SELECT)
+                .bind("email_id", email)
+                .map((rs, ctxt) -> new User(
+                        UUID.fromString(rs.getString("id")),
+                        rs.getString("name"),
+                        rs.getString("email_id"),
+                        rs.getString("encrypted_password")
+                        ))
+                .findFirst());
     }
 }

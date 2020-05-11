@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment, Label } from 'semantic-ui-react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect } from 'react-router-dom'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -8,21 +8,26 @@ class LoginForm extends React.Component {
     this.state = {
       hasSubmited: false,
       email: null,
-      password: null
+      password: null,
+      loggedIn: false,
     }
   }
 
   doLogin = (e, value) => {
     console.log(this.state);
-    fetch("/api/login", {
+    fetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }
+      },
+      body: JSON.stringify({email: this.state.email, password: this.state.password})
     })
     .then(res => res.json())
-    .then(res => console.log(res));
+    .then(res => {
+      localStorage.setItem("currentUser", JSON.stringify(res))
+      this.setState({loggedIn: true})
+    });
   }
 
   handleEmail = (e, input) => {
@@ -34,6 +39,9 @@ class LoginForm extends React.Component {
   }
 
   render() {
+    if (localStorage.getItem("currentUser")) {
+      return <Redirect to="/dashboard" />
+    }
     return (
       <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }}>

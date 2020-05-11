@@ -2,9 +2,11 @@ package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.auth.AuthFilter;
 import com.nasreen.carlog.model.User;
+import com.nasreen.carlog.request.LoginRequest;
 import com.nasreen.carlog.request.UserCreateRequest;
 import com.nasreen.carlog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,5 +40,16 @@ public class AuthController {
                     return ResponseEntity.ok(user);
                 })
                 .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @RequestMapping("/login")
+    public ResponseEntity<User> login(@Validated @RequestBody LoginRequest request,
+                                       HttpServletRequest servletRequest) {
+        return this.service.verify(request.getEmail(), request.getPassword())
+                .map(user -> {
+                    servletRequest.getSession().setAttribute(AuthFilter.LOGGED_IN_USER, user);
+                    return ResponseEntity.ok(user);
+                })
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 }

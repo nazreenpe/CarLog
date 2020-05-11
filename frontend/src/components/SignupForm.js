@@ -12,7 +12,8 @@ class SignupForm extends React.Component {
       signupError: false,
       nameError: false,
       passwordError: false,
-      emailError: false
+      emailError: false,
+      signedUp: false
     };
   }
 
@@ -66,6 +67,7 @@ class SignupForm extends React.Component {
       })
       .then(res => {
         localStorage.setItem("currentUser", JSON.stringify(res))
+        this.setState({signedUp: true})
       })
       .catch(error => {
         this.setState({ signupError: true })
