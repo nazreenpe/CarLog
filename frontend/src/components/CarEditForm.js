@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom'
 import {
-  Button, Form, Grid, Header, Image, Message, Segment, Label, Container, Divider
+  Button, Form, Grid, Confirm, Image, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
 
 class CarEditForm extends React.Component {
@@ -20,12 +20,15 @@ class CarEditForm extends React.Component {
       carToEdit: {},
       failedToCreate: false,
       carDeleted: false,
-      failedToDelete: false
+      failedToDelete: false,
+      showConfirm: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.delete = this.delete.bind(this);
+    this.confirmDelete = this.confirmDelete.bind(this);
+    this.cancelDelete = this.cancelDelete.bind(this);
   }
 
   componentDidMount() {
@@ -118,6 +121,14 @@ class CarEditForm extends React.Component {
       })
   }
 
+  confirmDelete() {
+    this.setState({showConfirm: true})
+  }
+
+  cancelDelete() {
+    this.setState({showConfirm: false})
+  }
+
   render() {
     if (this.state.updatedCar) {
       return <Redirect to={"/dashboard/cars/" + this.state.updatedCar.id} />
@@ -142,7 +153,12 @@ class CarEditForm extends React.Component {
           negative
           icon="trash"
           labelPosition='left'
-          onClick={this.delete}
+          onClick={this.confirmDelete}
+        />
+        <Confirm
+          open={this.state.showConfirm}
+          onCancel={this.cancelDelete}
+          onConfirm={this.delete}
         />
         <Divider />
         <Grid textAlign='left' style={{ height: '100vh' }}>
