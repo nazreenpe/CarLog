@@ -10,6 +10,7 @@ class LoginForm extends React.Component {
       email: null,
       password: null,
       loggedIn: false,
+      loginError: false
     }
   }
 
@@ -23,11 +24,19 @@ class LoginForm extends React.Component {
       },
       body: JSON.stringify({email: this.state.email, password: this.state.password})
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+          throw new Error()
+        }
+        return res.json()
+    })
     .then(res => {
       localStorage.setItem("currentUser", JSON.stringify(res))
       this.setState({loggedIn: true})
-    });
+    })
+    .catch(error => {
+      this.setState({ loginError: true })
+     })
   }
 
   handleEmail = (e, input) => {
@@ -54,6 +63,7 @@ class LoginForm extends React.Component {
                 iconPosition='left'
                 placeholder='E-mail address' 
                 onChange={this.handleEmail}
+                error={this.state.loginError}
                 />
               <Form.Input
                 fluid
@@ -61,6 +71,7 @@ class LoginForm extends React.Component {
                 iconPosition='left'
                 placeholder='Password'
                 type='password'
+                error={this.state.loginError}
                 onChange={this.handlePassword}
               />
 
