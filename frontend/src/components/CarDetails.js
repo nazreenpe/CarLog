@@ -48,6 +48,14 @@ class CarDetails extends React.Component {
         <Header as="h1">{car.make + " " + car.model}</Header>
         <Header as="h2">{car.year + " " + car.trim}</Header>
         <Button
+          content={"Back"}
+          icon="left arrow"
+          labelPosition='left'
+          as={NavLink}
+          to={"/dashboard"}
+          push={true}
+        />
+        <Button
           positive
           content="Edit"
           icon="pencil"
