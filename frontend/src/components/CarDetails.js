@@ -38,6 +38,7 @@ class CarDetails extends React.Component {
           <Container>
           <Header as="h1">{this.state.car.make + " " + this.state.car.model}</Header>
           <Header as="h2">{this.state.car.year + " " + this.state.car.trim}</Header>
+
            <Grid divided='vertically'>
               <Grid.Row columns={1}>
                 <Grid.Column> Record 1 </Grid.Column>
