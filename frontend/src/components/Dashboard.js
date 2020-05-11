@@ -12,7 +12,7 @@ Menu,
 Message,
 Segment,
 Label } from 'semantic-ui-react'
-
+import Logout from './Logout.js'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -38,7 +38,9 @@ class Dashboard extends Component {
             <Dropdown.Menu>
               <Dropdown.Item as={NavLink} to="/profile">Profile</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item as={NavLink} to="/logout">Log out</Dropdown.Item>
+              <Logout />
+
+
             </Dropdown.Menu>
           </Dropdown>
         </Container>

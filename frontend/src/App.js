@@ -11,7 +11,6 @@ function App() {
       <HashRouter>
         <Route exact path="/(|signup|login|home)" component={AppLayout} />
         <Route exact path="/dashboard" render={props => <Dashboard /> } />
-        <Route exact path="/logout" render={props => <Logout /> } />
       </HashRouter>
   );
 }
