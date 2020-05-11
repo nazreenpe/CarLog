@@ -16,7 +16,7 @@ class CarEditForm extends React.Component {
       model: '',
       year: null,
       trim: '',
-      createdCar: null,
+      updatedCar: null,
       carToEdit: {},
       failedToCreate: false
     };
@@ -82,7 +82,7 @@ class CarEditForm extends React.Component {
         return res.json()
       })
       .then(car => {
-        this.setState({ createdCar: car })
+        this.setState({ updatedCar: car })
         console.log(car)
       })
       .catch(error => {
@@ -94,17 +94,17 @@ class CarEditForm extends React.Component {
 
   render() {
 
-    if (this.state.createdCar) {
-      return <Redirect to={"/dashboard/cars/" + this.state.createdCar.id} />
+    if (this.state.updatedCar) {
+      return <Redirect to={"/dashboard/cars/" + this.state.updatedCar.id} />
     }
 
     return (
       <Container>
-        <Button content="Back to cars"
+        <Button content={"Back"}
           icon="left arrow"
           labelPosition='left'
           as={NavLink}
-          to="/dashboard"
+          to={"/dashboard/cars/" + this.state.id}
           push={true}
         />
         <Divider />

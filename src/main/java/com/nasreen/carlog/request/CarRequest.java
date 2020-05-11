@@ -5,7 +5,7 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-public class CarCreateRequest {
+public class CarRequest {
     @NotBlank
     private String make;
     @NotBlank
@@ -16,10 +16,10 @@ public class CarCreateRequest {
     @NotBlank
     private String trim;
 
-    public CarCreateRequest() {
+    public CarRequest() {
     }
 
-    public CarCreateRequest(String make, String model, Integer year, String trim) {
+    public CarRequest(String make, String model, Integer year, String trim) {
         this.make = make;
         this.model = model;
         this.year = year;

@@ -2,8 +2,7 @@ package com.nasreen.carlog.service;
 
 import com.nasreen.carlog.db.CarRepository;
 import com.nasreen.carlog.model.Car;
-import com.nasreen.carlog.request.CarCreateRequest;
-import com.nasreen.carlog.request.CarUpdateRequest;
+import com.nasreen.carlog.request.CarRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class CarService {
         this.repository = repository;
     }
 
-    public Car create(CarCreateRequest request) {
+    public Car create(CarRequest request) {
         Car car = new Car(request.getMake(), request.getModel(), request.getYear(), request.getTrim());
         return repository.save(car);
     }
@@ -33,13 +32,13 @@ public class CarService {
         return repository.findById(id).flatMap(car -> repository.delete(id));
     }
 
-    public Optional<Car> update(UUID id, CarUpdateRequest request) {
+    public Optional<Car> update(UUID id, CarRequest request) {
         return repository.findById(id)
                 .flatMap(car -> {
-                    request.getTrim().ifPresent(car::setTrim);
-                    request.getMake().ifPresent(car::setMake);
-                    request.getModel().ifPresent(car::setModel);
-                    request.getYear().ifPresent(car::setYear);
+                    car.setMake(request.getMake());
+                    car.setModel(request.getModel());
+                    car.setYear(request.getYear());
+                    car.setTrim(request.getTrim());
                     return repository.update(car);
                 });
     }

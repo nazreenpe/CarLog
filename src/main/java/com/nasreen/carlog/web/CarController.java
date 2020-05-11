@@ -1,8 +1,7 @@
 package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.model.Car;
-import com.nasreen.carlog.request.CarCreateRequest;
-import com.nasreen.carlog.request.CarUpdateRequest;
+import com.nasreen.carlog.request.CarRequest;
 import com.nasreen.carlog.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,7 +25,7 @@ public class CarController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public Car create(@Validated @RequestBody CarCreateRequest createRequest) {
+    public Car create(@Validated @RequestBody CarRequest createRequest) {
         return service.create(createRequest);
     }
 
@@ -50,7 +49,7 @@ public class CarController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Car> update(@PathVariable UUID id, @RequestBody CarUpdateRequest request) {
+    public ResponseEntity<Car> update(@PathVariable UUID id, @Validated @RequestBody CarRequest request) {
         return service.update(id, request)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

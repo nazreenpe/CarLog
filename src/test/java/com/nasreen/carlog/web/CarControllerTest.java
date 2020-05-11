@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nasreen.carlog.WithMockAuthScope;
 import com.nasreen.carlog.model.Car;
-import com.nasreen.carlog.request.CarCreateRequest;
+import com.nasreen.carlog.request.CarRequest;
 import com.nasreen.carlog.service.CarService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ class CarControllerTest {
 
     @Test
     public void shouldCreateCarWithRightParams() throws Exception {
-        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        CarRequest createRequest = new CarRequest("Toyota", "RAV4", 2018, "LE");
         this.mockMvc.perform(post("/api/cars").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createRequest)))
                 .andDo(print())
@@ -87,7 +87,7 @@ class CarControllerTest {
 
     @Test
     public void shouldFetchCarWithId() throws Exception {
-        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        CarRequest createRequest = new CarRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
         this.mockMvc.perform(get(String.format("/api/cars/%s", createdCar.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -113,7 +113,7 @@ class CarControllerTest {
 
     @Test
     public void shouldBeAbleToDeleteAnExistingCar() throws Exception {
-        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        CarRequest createRequest = new CarRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
         this.mockMvc.perform(delete(String.format("/api/cars/%s", createdCar.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -131,11 +131,15 @@ class CarControllerTest {
 
     @Test
     public void shouldUpdateExistingCar() throws Exception {
-        CarCreateRequest createRequest = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        CarRequest createRequest = new CarRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar = carService.create(createRequest);
         this.mockMvc.perform(put(String.format("/api/cars/%s", createdCar.getId()))
-                .content(objectMapper.writeValueAsString(Map.of("trim", "SE Sport",
-                        "year", 2020)))
+                .content(objectMapper.writeValueAsString(Map.of(
+                        "make", "Toyota",
+                        "trim", "SE Sport",
+                        "year", 2020,
+                        "model", "RAV4"
+                )))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
@@ -161,9 +165,9 @@ class CarControllerTest {
     @Test
     public void shouldFetchAllExistingCars() throws Exception {
         carService.deleteAll();
-        CarCreateRequest createRequest1 = new CarCreateRequest("Toyota", "RAV4", 2018, "LE");
+        CarRequest createRequest1 = new CarRequest("Toyota", "RAV4", 2018, "LE");
         Car createdCar1 = carService.create(createRequest1);
-        CarCreateRequest createRequest2 = new CarCreateRequest("Toyota", "PRIUS", 2018, "LE");
+        CarRequest createRequest2 = new CarRequest("Toyota", "PRIUS", 2018, "LE");
         Car createdCar2 = carService.create(createRequest2);
         this.mockMvc.perform(get("/api/cars")
                 .contentType(MediaType.APPLICATION_JSON))
