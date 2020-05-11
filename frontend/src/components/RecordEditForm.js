@@ -4,15 +4,16 @@ import {
   Button, Form, Grid, Header, Image, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
 
-class RecordForm extends React.Component {
+class RecordEditForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       carId: props.carId,
+      id: props.id,
       hasSubmitted: false,
       date: null,
-      createdRecord: null,
-      failedToCreate: false
+      recordToEdit: {},
+      failedToUpdate: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,11 +27,35 @@ class RecordForm extends React.Component {
     this.setState({ [name]: value });
   }
 
+  componentDidMount() {
+    let {carId, id} = this.state
+    fetch("/api/cars/" + carId + "/mrs/" + id , {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error()
+        }
+        return res.json()
+      })
+      .then(record => {
+        this.setState({ recordToEdit: record })
+        console.log(record)
+      })
+      .catch(error => {
+        this.setState({ failedToLoad: true })
+      })
+  }
+
   handleSubmit(event) {
     this.setState({ hasSubmitted: true });
-
-    fetch("/api/cars/" + this.state.carId + "/mrs", {
-      method: 'POST',
+    let {carId, id} = this.state
+    fetch("/api/cars/" + carId + "/mrs/" + id , {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -46,30 +71,31 @@ class RecordForm extends React.Component {
         return res.json()
       })
       .then(record => {
-        this.setState({ createdRecord: record })
+        this.setState({ updatedRecord: record })
         console.log(record)
       })
       .catch(error => {
-        this.setState({ failedToCreate: true })
+        this.setState({ failedToUpdate: true })
       })
 
     event.preventDefault();
   }
 
   render() {
-    if (this.state.createdRecord) {
+    let {recordToEdit, updatedRecord, id, carId} = this.state
+    if (updatedRecord) {
       return <Redirect
-        to={"/dashboard/cars/" + this.state.carId + "/mrs/" + this.state.createdRecord.id}
+        to={"/dashboard/cars/" + carId + "/mrs/" + id}
       />
     }
 
     return (
       <Container>
-        <Button content="Back to car"
+        <Button content="Back to record"
           icon="left arrow"
           labelPosition='left'
           as={NavLink}
-          to={"/dashboard/cars/" + this.state.carId}
+          to={"/dashboard/cars/" + carId + "/mrs/" + id}
           push={true}
         />
         <Divider />
@@ -81,8 +107,9 @@ class RecordForm extends React.Component {
                   iconPosition='left'
                   placeholder='Date'
                   name="date"
+                  defaultValue={recordToEdit.date}
                   onChange={this.handleChange}
-                  error={this.state.failedToCreate}
+                  error={this.state.failedToUpdate}
                 />
                 <Button color='teal' fluid size='large'>
                   Go
@@ -98,4 +125,4 @@ class RecordForm extends React.Component {
   }
 }
 
-export default RecordForm;
+export default RecordEditForm;

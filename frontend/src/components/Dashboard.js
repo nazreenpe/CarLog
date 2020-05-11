@@ -21,6 +21,7 @@ import CarDetails from './CarDetails.js'
 import CarForm from './CarForm.js'
 import CarEditForm from './CarEditForm.js'
 import RecordForm from './RecordForm.js'
+import RecordEditForm from './RecordEditForm.js'
 import RecordDetails from './RecordDetails.js'
 import ActivityForm from './ActivityForm.js'
 
@@ -72,8 +73,11 @@ class Dashboard extends Component {
                 ? <RecordForm carId={props.match.params.carId} />
                 : <RecordDetails carId={props.match.params.carId} id={props.match.params.id} />
             } />
+            <Route exact path="/dashboard/cars/:carId/mrs/:id/edit" render={props =>
+              <RecordEditForm carId={props.match.params.carId} id={props.match.params.id} />
+            } />
             <Route exact path="/dashboard/cars/:carId/mrs/:recordId/as/new" render={props =>
-               <ActivityForm carId={props.match.params.carId} recordId={props.match.params.recordId}/>
+              <ActivityForm carId={props.match.params.carId} recordId={props.match.params.recordId} />
             } />
           </HashRouter>
         </Container>
