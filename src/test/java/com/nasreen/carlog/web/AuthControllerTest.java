@@ -1,9 +1,7 @@
 package com.nasreen.carlog.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nasreen.carlog.WithMockAuthScope;
 import com.nasreen.carlog.model.User;
 import com.nasreen.carlog.request.UserCreateRequest;
 import com.nasreen.carlog.service.UserService;
@@ -15,10 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.servlet.http.Cookie;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,5 +68,21 @@ class AuthControllerTest {
                         "password","Password123"))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void shouldLogoutWithExistingUser() throws Exception {
+        service.create(new UserCreateRequest("test","test@example.com", "Password123"));
+        AtomicReference<Cookie> session = new AtomicReference<>();
+        this.mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(Map.of("email", "test@example.com",
+                        "password","Password123"))))
+        .andDo(result -> {
+            session.set(result.getResponse().getCookie("SESSION"));
+        });
+        this.mockMvc.perform(delete("/api/auth/logout").contentType(MediaType.APPLICATION_JSON)
+                .cookie(session.get()))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

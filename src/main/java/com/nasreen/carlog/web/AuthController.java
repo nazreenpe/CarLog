@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,7 @@ public class AuthController {
         this.service = service;
     }
 
-    @RequestMapping("/signup")
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<User> create(@Validated @RequestBody UserCreateRequest createRequest,
                                        HttpServletRequest servletRequest) {
         return this.service.create(createRequest)
@@ -42,14 +43,22 @@ public class AuthController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<User> login(@Validated @RequestBody LoginRequest request,
-                                       HttpServletRequest servletRequest) {
+                                      HttpServletRequest servletRequest) {
         return this.service.verify(request.getEmail(), request.getPassword())
                 .map(user -> {
                     servletRequest.getSession().setAttribute(AuthFilter.LOGGED_IN_USER, user);
                     return ResponseEntity.ok(user);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.DELETE)
+    public ResponseEntity logout(HttpServletRequest servletRequest) {
+        if (servletRequest.getSession() != null) {
+            servletRequest.getSession().invalidate();
+        }
+        return ResponseEntity.ok().build();
     }
 }
