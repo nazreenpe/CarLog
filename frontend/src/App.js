@@ -10,7 +10,7 @@ function App() {
   return (
       <HashRouter>
         <Route exact path="/(|signup|login|home)" component={AppLayout} />
-        <Route exact path="/dashboard" render={props => <Dashboard /> } />
+        <Route path="/dashboard" render={props => <Dashboard /> } />
       </HashRouter>
   );
 }

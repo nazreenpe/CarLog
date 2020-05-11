@@ -52,6 +52,7 @@ class Dashboard extends Component {
         <Container style={{ marginTop: '7em' }}>
           <HashRouter>
             <Route exact path="/dashboard" component={CarList} />
+            <Route exact path="/dashboard/cars/*" render = {(props) => (<div> Individual car</div>)} />
           </HashRouter>
         </Container>
       </div>

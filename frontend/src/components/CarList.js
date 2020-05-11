@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {Card} from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
+
 
 class CarList extends Component {
   constructor(props) {
@@ -31,7 +33,7 @@ class CarList extends Component {
 
   render() {
     return <div>
-      {this.state.cars.map(car => (<Card
+      {this.state.cars.map(car => (<Card as={NavLink} to={"/dashboard/cars/" + car.id}
         image="/favicon.png"
         header={car.year + " " + car.make + " " + car.model + " " + car.trim}
         meta={"Vin number=Todo"}
