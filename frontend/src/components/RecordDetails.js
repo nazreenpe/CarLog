@@ -11,20 +11,21 @@ import { NavLink, Link } from 'react-router-dom'
 
 
 
-class CarDetails extends React.Component {
+class RecordDetails extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
     this.state = {
       id: props.id,
-      car: {},
+      carId: props.carId,
+      record: {},
       hasLoaded: false,
-      records: []
+      activities: []
     };
   }
 
   componentDidMount() {
-    fetch("/api/cars/" + this.state.id, {
+    let {carId, id} = this.state
+    fetch("/api/cars/" + carId + "/mrs/" + id , {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -37,10 +38,10 @@ class CarDetails extends React.Component {
         }
         return res.json()
       })
-      .then(car => {
-        this.setState({ car: car, hasLoaded: true })
-        console.log(car)
-        fetch("/api/cars/" + car.id + "/mrs", {
+      .then(record => {
+        this.setState({ record: record, hasLoaded: true })
+        console.log(record)
+        fetch("/api/cars/" + carId + "/mrs/" + id + "/as", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -53,18 +54,17 @@ class CarDetails extends React.Component {
             }
             return res.json()
           })
-          .then(records => {
-            this.setState({ records: records })
+          .then(activities => {
+            this.setState({ activities: activities })
           })
       })
   }
 
   render() {
-    let { car } = this.state;
+    let { carId, record, activities } = this.state;
     return (
       <Container>
-        <Header as="h1">{car.make + " " + car.model}</Header>
-        <Header as="h2">{car.year + " " + car.trim}</Header>
+        <Header as="h1">Maintenance record for {record.date}</Header>
         <Button
           content={"Back"}
           icon="left arrow"
@@ -80,25 +80,25 @@ class CarDetails extends React.Component {
           labelPosition='right'
           size='small'
           as={Link}
-          to={"/dashboard/cars/" + car.id + "/edit"}
+          to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/edit"}
           push={true}
         />
         <Divider />
-        <Header as="h2">{this.state.records.length} Records</Header>
+        <Header as="h2">{this.state.activities.length} activities</Header>
         <Button
           positive
           as={NavLink}
-          to={"/dashboard/cars/" + car.id + "/mrs/new"}
-          content="Add a Record"
+          to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/as/new"}
+          content="Record an activity"
         />
         <Divider />
         <Grid divided='vertically'>
-          {this.state.records.map(record => {
+          {activities.map(activity => {
             return <Grid.Row columns={1}>
               <Grid.Column>
-                <Card as={NavLink} to={"/dashboard/cars/" + car.id + "/mrs/" + record.id}>
+                <Card>
                   <Card.Content>
-                    <Card.Header>{record.date}</Card.Header>
+                    <Card.Header>{activity.type}</Card.Header>
                   </Card.Content>
                 </Card>
               </Grid.Column>
@@ -111,4 +111,4 @@ class CarDetails extends React.Component {
   }
 }
 
-export default CarDetails;
+export default RecordDetails;
