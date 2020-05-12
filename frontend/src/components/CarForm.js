@@ -14,12 +14,14 @@ class CarForm extends React.Component {
       model: '',
       year: null,
       trim: '',
+      vin: '',
       createdCar: null,
       failedToCreate: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleVinSubmit = this.handleVinSubmit.bind(this);
   }
 
   handleChange(event, input) {
@@ -62,6 +64,43 @@ class CarForm extends React.Component {
     event.preventDefault();
   }
 
+  handleVinSubmit(event) {
+    this.setState({ hasSubmitted: true });
+
+    fetch("/api/vin/" + this.state.vin, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          return new Error()
+        }
+        return res.json()
+      })
+      .then(res => res.Results)
+      .then(results => {
+        let carFromVin = {}
+        results.forEach(result => {
+          if (["Make", "Model", "Model Year", "Trim"].includes(result["Variable"])) {
+            carFromVin[result["Variable"]] = result["Value"]
+          }
+        });
+        this.setState({
+          make: carFromVin["Make"],
+          model: carFromVin["Model"],
+          year: carFromVin["Model Year"],
+          trim: carFromVin["Trim"]
+        })
+      })
+      .catch(error => {
+        debugger
+        this.setState({ vinError: true })
+      })
+  }
+
   render() {
     if (this.state.createdCar) {
       return <Redirect to={"/dashboard/cars/" + this.state.createdCar.id} />
@@ -79,12 +118,27 @@ class CarForm extends React.Component {
         <Divider />
         <Grid textAlign='left' style={{ height: '100vh' }}>
           <Grid.Column style={{ maxWidth: 450 }}>
+            <Form size='large' onSubmit={this.handleVinSubmit}>
+              <Segment stacked>
+                <Form.Input fluid icon='book'
+                  iconPosition='left'
+                  placeholder='VIN'
+                  name="vin"
+                  onChange={this.handleChange}
+                  error={this.state.failedToCreate}
+                />
+                <Button color='teal' fluid size='large'>
+                  Go
+              </Button>
+              </Segment>
+            </Form>
             <Form size='large' onSubmit={this.handleSubmit}>
               <Segment stacked>
                 <Form.Input fluid icon='factory'
                   iconPosition='left'
                   placeholder='Make'
                   name="make"
+                  value={this.state.make}
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
@@ -92,6 +146,7 @@ class CarForm extends React.Component {
                   iconPosition='left'
                   placeholder='Model'
                   name="model"
+                  value={this.state.model}
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
@@ -99,6 +154,7 @@ class CarForm extends React.Component {
                   iconPosition='left'
                   placeholder='Year'
                   name="year"
+                  value={this.state.year}
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
@@ -106,6 +162,7 @@ class CarForm extends React.Component {
                   iconPosition='left'
                   placeholder='Trim'
                   name="trim"
+                  value={this.state.trim}
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
