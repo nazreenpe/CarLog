@@ -5,6 +5,7 @@ import {
   Container,
   Grid,
   Header,
+  Item,
   Divider
 } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom'
@@ -37,7 +38,6 @@ class RecordDetails extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({displayEditForm: false})
     let { carId, id } = this.state
     fetch("/api/cars/" + carId + "/mrs/" + id, {
       method: "GET",
@@ -118,21 +118,18 @@ class RecordDetails extends React.Component {
           content="Record an activity"
         />
         <Divider />
-        <Grid divided='vertically'>
+        <Item.Group link>
           {activities.map(activity => {
-            return <Grid.Row columns={1}>
-              <Grid.Column>
-                <Card>
-                  <Card.Content>
-                    <Card.Header>{activity.typeName}</Card.Header>
-                  </Card.Content>
-                </Card>
-              </Grid.Column>
-            </Grid.Row>
+            return <Item>
+              <Item.Image size='tiny' src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg' />
+              <Item.Content>
+                <Item.Header>{activity.typeName}</Item.Header>
+                <Item.Description>{activity.notes}</Item.Description>
+              </Item.Content>
+            </Item>
           })}
-        </Grid>
-
-      </Container >
+        </Item.Group>
+      </Container>
     )
   }
 }
