@@ -88,6 +88,7 @@ class RecordEditForm extends React.Component {
     if (updatedRecord) {
       return <Redirect
         to={"/dashboard/cars/" + carId + "/mrs/" + id}
+        push={true}
       />
     }
 
@@ -96,35 +97,21 @@ class RecordEditForm extends React.Component {
     }
 
     return (
-      <Container>
-        <Button content="Back to record"
-          icon="left arrow"
-          labelPosition='left'
-          as={NavLink}
-          to={"/dashboard/cars/" + carId + "/mrs/" + id}
-          push={true}
-        />
-        <Divider />
-        <Grid textAlign='left' style={{ height: '100vh' }}>
-          <Grid.Column style={{ maxWidth: 450 }}>
+      <Grid textAlign='left'>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Segment>
             <Form size='large' onSubmit={this.handleSubmit}>
-              <Segment stacked>
-                <SemanticDatepicker
-                  name="date"
-                  placeholder={recordToEdit.date}
-                  onChange={this.handleChange}
-                  error={this.state.failedToCreate}
-                />
-                <Button color='teal' fluid size='large'>
-                  Go
-              </Button>
-              </Segment>
+              <SemanticDatepicker
+                name="date"
+                placeholder={recordToEdit.date}
+                onChange={this.handleChange}
+                error={this.state.failedToCreate}
+              />
+              <Button content="Submit" color='teal' size='large' />
             </Form>
-          </Grid.Column>
-        </Grid>
-
-      </Container>
-
+          </Segment>
+        </Grid.Column>
+      </Grid>
     );
   }
 }

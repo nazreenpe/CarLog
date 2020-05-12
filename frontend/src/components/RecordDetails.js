@@ -8,6 +8,7 @@ import {
   Divider
 } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom'
+import RecordEditForm from './RecordEditForm';
 
 
 
@@ -19,13 +20,26 @@ class RecordDetails extends React.Component {
       carId: props.carId,
       record: {},
       hasLoaded: false,
-      activities: []
+      activities: [],
+      displayEditForm: false
     };
+
+    this.showEditForm = this.showEditForm.bind(this)
+    this.hideRecordForm = this.hideRecordForm.bind(this)
+  }
+
+  showEditForm() {
+    this.setState({ displayEditForm: true })
+  }
+
+  hideRecordForm() {
+    this.setState({ displayEditForm: false })
   }
 
   componentDidMount() {
-    let {carId, id} = this.state
-    fetch("/api/cars/" + carId + "/mrs/" + id , {
+    this.setState({displayEditForm: false})
+    let { carId, id } = this.state
+    fetch("/api/cars/" + carId + "/mrs/" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -79,10 +93,22 @@ class RecordDetails extends React.Component {
           icon="pencil"
           labelPosition='right'
           size='small'
-          as={Link}
-          to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/edit"}
-          push={true}
+          onClick={this.showEditForm}
         />
+
+        {
+          this.state.displayEditForm ?
+            <div>
+              <Button
+                negative
+                icon="trash"
+                onClick={this.hideRecordForm}
+                content="Cancel"
+              />
+              <RecordEditForm carId={carId} id={record.id} />
+            </div> :
+            <div></div>
+        }
         <Divider />
         <Header as="h2">{this.state.activities.length} activities</Header>
         <Button
