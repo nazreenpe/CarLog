@@ -120,7 +120,7 @@ class RecordDetails extends React.Component {
         <Divider />
         <Item.Group link>
           {activities.map(activity => {
-            return <Item>
+            return <Item key={activity.id}>
               <Item.Image size='tiny' src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg' />
               <Item.Content>
                 <Item.Header>{activity.typeName}</Item.Header>

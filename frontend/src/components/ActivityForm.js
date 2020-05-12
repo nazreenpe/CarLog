@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom'
 import {
-  Button, Form, Grid, Dropdown, Image, Message, Segment, Label, Container, Divider
+  Button, Form, Grid, Dropdown, TextArea, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
 
 class ActivityForm extends React.Component {
@@ -12,6 +12,7 @@ class ActivityForm extends React.Component {
       recordId: props.recordId,
       hasSubmitted: false,
       type: null,
+      notes: null,
       createdActivity: null,
       failedToCreate: false,
       validActivities: [
@@ -43,7 +44,8 @@ class ActivityForm extends React.Component {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        "type": this.state.type
+        type: this.state.type,
+        notes: this.state.notes
       })
     })
       .then(res => {
@@ -93,6 +95,11 @@ class ActivityForm extends React.Component {
                   name="type"
                   options={this.state.validActivities}
                 />
+                <TextArea
+                  name="notes"
+                  onChange={this.handleChange}
+                  error={this.state.failedToCreate}
+                  placeholder='Notes' />
                 <Button color='teal' fluid size='large'>
                   Go
               </Button>
