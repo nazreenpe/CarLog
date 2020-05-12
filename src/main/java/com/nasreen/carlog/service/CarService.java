@@ -24,16 +24,16 @@ public class CarService {
         return repository.save(car);
     }
 
-    public Optional<Car> get(UUID id) {
-        return repository.findById(id);
+    public Optional<Car> get(UUID id, UUID userId) {
+        return repository.findById(id, userId);
     }
 
-    public Optional<UUID> delete(UUID id) {
-        return repository.findById(id).flatMap(car -> repository.delete(id));
+    public Optional<UUID> delete(UUID id, UUID userId) {
+        return repository.findById(id, userId).flatMap(car -> repository.delete(id, userId));
     }
 
-    public Optional<Car> update(UUID id, CarRequest request) {
-        return repository.findById(id)
+    public Optional<Car> update(UUID id, UUID userId, CarRequest request) {
+        return repository.findById(id, userId)
                 .flatMap(car -> {
                     car.setMake(request.getMake());
                     car.setModel(request.getModel());

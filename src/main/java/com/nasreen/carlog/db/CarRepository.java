@@ -14,13 +14,13 @@ import java.util.UUID;
 @Repository
 @Transactional
 public class CarRepository {
-    public static final String SELECT_QUERY = "SELECT * FROM cars WHERE id = :id";
+    public static final String SELECT_QUERY = "SELECT * FROM cars WHERE id = :id AND user_id = :userId";
     public static final String INSERT_QUERY = "INSERT INTO cars(id, make, model, year, trim, user_id)" +
             "  VALUES(:id, :make, :model, :year, :trim, :userId)";
     public static final String SELECT_ALL = "SELECT * FROM cars WHERE user_id = :userId";
     public static final String UPDATE = "UPDATE cars SET make = :make, model = :model, " +
-            "year = :year, trim = :trim WHERE id = :id";
-    public static final String DELETE = "DELETE FROM cars WHERE id = :id";
+            "year = :year, trim = :trim WHERE id = :id AND user_id = :userId";
+    public static final String DELETE = "DELETE FROM cars WHERE id = :id AND user_id = :userId";
     public static final String DELETE_ALL = "DELETE FROM cars";
     private Jdbi jdbi;
 
@@ -43,9 +43,10 @@ public class CarRepository {
         });
     }
 
-    public Optional<Car> findById(UUID id) {
+    public Optional<Car> findById(UUID id, UUID userId) {
         return jdbi.withHandle(handle -> handle.createQuery(SELECT_QUERY)
                 .bind("id", id.toString())
+                .bind("userId", userId.toString())
                 .map(carRowMapper())
                 .findFirst());
     }
@@ -65,13 +66,15 @@ public class CarRepository {
                 .bind("model", car.getModel())
                 .bind("year", car.getYear())
                 .bind("trim", car.getTrim())
+                .bind("userId", car.getUserId().toString())
                 .execute());
         return Optional.of(car);
     }
 
-    public Optional<UUID> delete(UUID id) {
+    public Optional<UUID> delete(UUID id, UUID userId) {
         jdbi.withHandle(handle -> handle.createUpdate(DELETE)
                 .bind("id", id.toString())
+                .bind("userId", userId.toString())
                 .execute());
         return Optional.ofNullable(id);
     }

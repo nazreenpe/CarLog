@@ -43,22 +43,27 @@ public class CarController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Car> get(@PathVariable UUID id) {
-        return service.get(id)
+    public ResponseEntity<Car> get(@PathVariable UUID id, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return service.get(id, user.getId())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<UUID> delete(@PathVariable UUID id) {
-        return service.delete(id)
+    public ResponseEntity<UUID> delete(@PathVariable UUID id, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return service.delete(id, user.getId())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Car> update(@PathVariable UUID id, @Validated @RequestBody CarRequest request) {
-        return service.update(id, request)
+    public ResponseEntity<Car> update(@PathVariable UUID id,
+                                      @Validated @RequestBody CarRequest request,
+                                      Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return service.update(id, user.getId(), request)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

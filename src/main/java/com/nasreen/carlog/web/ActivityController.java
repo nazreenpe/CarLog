@@ -1,6 +1,7 @@
 package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.model.Activity;
+import com.nasreen.carlog.model.User;
 import com.nasreen.carlog.request.ActivityCreate;
 import com.nasreen.carlog.request.ActivityUpdate;
 import com.nasreen.carlog.service.ActivityService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +37,9 @@ public class ActivityController {
     public ResponseEntity<Activity> create(
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
-            @RequestBody ActivityCreate request) {
-        return carService.get(carId)
+            @RequestBody ActivityCreate request, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .flatMap(car -> recordService.get(car, recordId)
                         .map(record -> service.create(record.getId(), request)))
                 .map(activity -> ResponseEntity.status(HttpStatus.CREATED).body(activity))
@@ -45,9 +48,11 @@ public class ActivityController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<Activity>> list(
-            @PathVariable UUID carId,
-            @PathVariable UUID recordId) {
-        return carService.get(carId)
+        @PathVariable UUID carId,
+        @PathVariable UUID recordId,
+        Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .flatMap(car -> recordService.get(car, recordId)
                         .map(record -> service.list(record.getId())))
                 .map(ResponseEntity::ok)
@@ -58,8 +63,10 @@ public class ActivityController {
     public ResponseEntity<Activity> get(
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
-            @PathVariable UUID id) {
-        return carService.get(carId)
+            @PathVariable UUID id,
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .flatMap(car -> recordService.get(car, recordId)
                         .flatMap(record -> service.get(record.getId(), id)))
                 .map(ResponseEntity::ok)
@@ -72,8 +79,10 @@ public class ActivityController {
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
             @PathVariable UUID id,
-            @RequestBody ActivityUpdate request) {
-        return carService.get(carId)
+            @RequestBody ActivityUpdate request,
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .flatMap(car -> recordService.get(car, recordId)
                         .flatMap(record -> service.update(record.getId(), id, request)))
                 .map(ResponseEntity::ok)
@@ -84,8 +93,10 @@ public class ActivityController {
     public ResponseEntity<UUID> delete(
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
-            @PathVariable UUID id) {
-        return carService.get(carId)
+            @PathVariable UUID id,
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .flatMap(car -> recordService.get(car, recordId)
                         .flatMap(record -> service.delete(record.getId(), id)))
                 .map(ResponseEntity::ok)

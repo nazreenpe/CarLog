@@ -1,6 +1,7 @@
 package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.model.Record;
+import com.nasreen.carlog.model.User;
 import com.nasreen.carlog.request.RecordCreateRequest;
 import com.nasreen.carlog.request.RecordUpdate;
 import com.nasreen.carlog.service.CarService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,23 +33,30 @@ public class RecordController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Record> create(
-            @PathVariable UUID carId,
-            @RequestBody RecordCreateRequest request) {
-        return carService.get(carId)
+        @PathVariable UUID carId,
+        @RequestBody RecordCreateRequest request,
+        Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .map(car -> ResponseEntity.status(HttpStatus.CREATED).body(service.create(request, car)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<Record>> list(@PathVariable UUID carId) {
-        return carService.get(carId)
+    public ResponseEntity<List<Record>> list(@PathVariable UUID carId,
+                                             Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .map(car -> ResponseEntity.ok(service.list(car)))
                 .orElse(ResponseEntity.badRequest().build());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Optional<Record>> get(@PathVariable UUID carId, @PathVariable UUID id) {
-        return carService.get(carId)
+    public ResponseEntity<Optional<Record>> get(@PathVariable UUID carId,
+                                                @PathVariable UUID id,
+                                                Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .map(car -> ResponseEntity.ok(service.get(car, id)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -56,8 +65,10 @@ public class RecordController {
     public ResponseEntity<Optional<Record>> update(
             @PathVariable UUID carId,
             @PathVariable UUID id,
-            @RequestBody RecordUpdate update) {
-        return carService.get(carId)
+            @RequestBody RecordUpdate update,
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .map(car -> ResponseEntity.ok(service.update(car, id, update)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -65,8 +76,9 @@ public class RecordController {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity delete(
             @PathVariable UUID carId,
-            @PathVariable UUID id) {
-        return carService.get(carId)
+            @PathVariable UUID id, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return carService.get(carId, user.getId())
                 .map(car -> {
                     service.delete(car, id);
                     return ResponseEntity.accepted().build();
