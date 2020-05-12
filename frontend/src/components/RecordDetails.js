@@ -98,7 +98,7 @@ class RecordDetails extends React.Component {
               <Grid.Column>
                 <Card>
                   <Card.Content>
-                    <Card.Header>{activity.type}</Card.Header>
+                    <Card.Header>{activity.typeName}</Card.Header>
                   </Card.Content>
                 </Card>
               </Grid.Column>

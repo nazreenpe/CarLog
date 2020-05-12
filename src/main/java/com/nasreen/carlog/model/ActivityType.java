@@ -2,12 +2,16 @@ package com.nasreen.carlog.model;
 
 public enum ActivityType {
     OIL_CHANGE("Oil Change"),
-    TIRE_ROTATION("Tire rotation"),
+    TIRE_ROTATION("Tire Rotation"),
     REPLACE_WIPER("Replace Wiper");
 
-    private String name;
+    private String publicName;
+
+    public String getPublicName() {
+        return publicName;
+    }
 
     ActivityType(String name) {
-        this.name = name;
+        this.publicName = name;
     }
 }

@@ -26,6 +26,10 @@ public class Activity {
         return type;
     }
 
+    public String getTypeName() {
+        return type.getPublicName();
+    }
+
     public UUID getRecordId() {
         return recordId;
     }

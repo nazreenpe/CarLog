@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, NavLink } from 'react-router-dom'
 import {
-  Button, Form, Grid, Header, Image, Message, Segment, Label, Container, Divider
+  Button, Form, Grid, Dropdown, Image, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
 
 class ActivityForm extends React.Component {
@@ -9,11 +9,16 @@ class ActivityForm extends React.Component {
     super(props);
     this.state = {
       carId: props.carId,
-      recordId: props.recordId,  
+      recordId: props.recordId,
       hasSubmitted: false,
-      type: null, 
+      type: null,
       createdActivity: null,
-      failedToCreate: false
+      failedToCreate: false,
+      validActivities: [
+        { key: "OIL_CHANGE", value: "OIL_CHANGE", text: "Oil Change" },
+        { key: "TIRE_ROTATION", value: "TIRE_ROTATION", text: "Tire Rotation" },
+        { key: "REPLACE_WIPER", value: "REPLACE_WIPER", text: "Replace Wiper" },
+      ]
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -21,15 +26,15 @@ class ActivityForm extends React.Component {
   }
 
   handleChange(event, input) {
-    console.log("Setting value to", event.target.value);
-    let name = event.target.name;
-    let value = event.target.value;
+    console.log("Setting value to", input.value);
+    let name = input.name;
+    let value = input.value;
     this.setState({ [name]: value });
   }
 
   handleSubmit(event) {
     this.setState({ hasSubmitted: true });
-    let {carId, recordId} = this.state
+    let { carId, recordId } = this.state
 
     fetch("/api/cars/" + carId + "/mrs/" + recordId + "/as", {
       method: 'POST',
@@ -59,7 +64,7 @@ class ActivityForm extends React.Component {
   }
 
   render() {
-    let {carId, recordId, createdActivity} = this.state
+    let { carId, recordId, createdActivity } = this.state
     if (createdActivity) {
       return <Redirect to={"/dashboard/cars/" + carId + "/mrs/" + recordId} />
     }
@@ -78,12 +83,15 @@ class ActivityForm extends React.Component {
           <Grid.Column style={{ maxWidth: 450 }}>
             <Form size='large' onSubmit={this.handleSubmit}>
               <Segment stacked>
-                <Form.Input fluid icon='factory'
-                  iconPosition='left'
-                  placeholder='Type'
-                  name="type"
+                <Dropdown
+                  placeholder='Select an activity'
+                  fluid
+                  search
+                  selection
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
+                  name="type"
+                  options={this.state.validActivities}
                 />
                 <Button color='teal' fluid size='large'>
                   Go
