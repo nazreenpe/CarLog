@@ -37,8 +37,9 @@ public class CarController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Car> list() {
-        return service.list();
+    public List<Car> list(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return service.list(user.getId());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

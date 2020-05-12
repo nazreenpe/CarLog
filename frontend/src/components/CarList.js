@@ -3,6 +3,8 @@ import {
   Button,
   Card,
   Divider,
+  Dimmer,
+  Loader,
   Grid,
   Header
 } from 'semantic-ui-react'
@@ -12,7 +14,9 @@ class CarList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      cars: []
+      cars: [],
+      failedToLoad: false,
+      hasLoaded: false
     }
   }
 
@@ -31,8 +35,12 @@ class CarList extends Component {
         return res.json()
       })
       .then(cars => {
-        this.setState({ cars: cars })
+        this.setState({ cars: cars, hasLoaded: true })
         console.log(cars)
+      })
+      .catch(error => {
+        this.setState({ hasLoaded: false })
+        console.log("Error fetching cars")
       })
   }
 
@@ -62,6 +70,7 @@ class CarList extends Component {
         to="/dashboard/cars/new"
         push={true} />
       <Divider />
+      <Loader inline active={!this.state.hasLoaded} content="Loading ..."/>
       <Grid divided="vertically">
         {rows}
       </Grid>

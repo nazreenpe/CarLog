@@ -47,7 +47,7 @@ public class CarService {
         repository.deleteAll();
     }
 
-    public List<Car> list() {
-        return repository.list();
+    public List<Car> list(UUID userId) {
+        return repository.list(userId);
     }
 }

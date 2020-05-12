@@ -17,7 +17,7 @@ public class CarRepository {
     public static final String SELECT_QUERY = "SELECT * FROM cars WHERE id = :id";
     public static final String INSERT_QUERY = "INSERT INTO cars(id, make, model, year, trim, user_id)" +
             "  VALUES(:id, :make, :model, :year, :trim, :userId)";
-    public static final String SELECT_ALL = "SELECT * FROM cars";
+    public static final String SELECT_ALL = "SELECT * FROM cars WHERE user_id = :userId";
     public static final String UPDATE = "UPDATE cars SET make = :make, model = :model, " +
             "year = :year, trim = :trim WHERE id = :id";
     public static final String DELETE = "DELETE FROM cars WHERE id = :id";
@@ -50,8 +50,9 @@ public class CarRepository {
                 .findFirst());
     }
 
-    public List<Car> list() {
+    public List<Car> list(UUID userId) {
         return jdbi.withHandle(handle -> handle.createQuery(SELECT_ALL)
+                .bind("userId", userId.toString())
                 .map(carRowMapper())
                 .list()
                 );
