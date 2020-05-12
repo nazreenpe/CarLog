@@ -9,6 +9,7 @@ import com.nasreen.carlog.request.CarRequest;
 import com.nasreen.carlog.request.RecordCreateRequest;
 import com.nasreen.carlog.service.CarService;
 import com.nasreen.carlog.service.RecordService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,10 +43,16 @@ public class RecordControllerTest {
 
     @Autowired
     private RecordService service;
+    private static UUID testUserId;
+
+    @BeforeAll
+    public static void setup() {
+        testUserId = UUID.fromString(WithMockAuthScope.USER_ID_STR);
+    }
 
     @Test
     public void shouldCreateMaintenanceRecordWithRightParams() throws Exception {
-        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"));
+        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"), testUserId);
         RecordCreateRequest request = new RecordCreateRequest(LocalDate.now());
         this.mockMvc.perform(post(String.format("/api/cars/%s/mrs", car.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +79,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldFetchAllMaintenanceRecordsOfExistingCar() throws Exception {
-        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"));
+        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"), testUserId);
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         Record record2 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         this.mockMvc.perform(get(String.format("/api/cars/%s/mrs", car.getId()))
@@ -91,7 +98,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldFetchExistingMaintenanceRecord() throws Exception {
-        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"));
+        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"), testUserId);
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         this.mockMvc.perform(get(String.format("/api/cars/%s/mrs/%s", car.getId(), record1.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -115,7 +122,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldUpdateExistingMaintenanceRecord() throws Exception {
-        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"));
+        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"), testUserId);
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         LocalDate newDate = LocalDate.now().plusDays(1);
         this.mockMvc.perform(put(String.format("/api/cars/%s/mrs/%s", car.getId(), record1.getId()))
@@ -131,7 +138,7 @@ public class RecordControllerTest {
 
     @Test
     public void shouldDeleteExistingMaintenanceRecord() throws Exception {
-        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"));
+        Car car = carService.create(new CarRequest("Toyota", "RAV4", 2018, "LE"), testUserId);
         Record record1 = service.create(new RecordCreateRequest(LocalDate.now()), car);
         this.mockMvc.perform(delete(String.format("/api/cars/%s/mrs/%s", car.getId(), record1.getId()))
                 .contentType(MediaType.APPLICATION_JSON))

@@ -15,8 +15,8 @@ import java.util.UUID;
 @Transactional
 public class CarRepository {
     public static final String SELECT_QUERY = "SELECT * FROM cars WHERE id = :id";
-    public static final String INSERT_QUERY = "INSERT INTO cars(id, make, model, year, trim)" +
-            "  VALUES(:id, :make, :model, :year, :trim)";
+    public static final String INSERT_QUERY = "INSERT INTO cars(id, make, model, year, trim, user_id)" +
+            "  VALUES(:id, :make, :model, :year, :trim, :userId)";
     public static final String SELECT_ALL = "SELECT * FROM cars";
     public static final String UPDATE = "UPDATE cars SET make = :make, model = :model, " +
             "year = :year, trim = :trim WHERE id = :id";
@@ -37,6 +37,7 @@ public class CarRepository {
                     .bind("model", car.getModel())
                     .bind("year", car.getYear())
                     .bind("trim", car.getTrim())
+                    .bind("userId", car.getUserId())
                     .execute();
             return car;
         });
@@ -83,6 +84,7 @@ public class CarRepository {
                 rs.getString("make"),
                 rs.getString("model"),
                 rs.getInt("year"),
-                rs.getString("trim"));
+                rs.getString("trim"),
+                UUID.fromString(rs.getString("user_id")));
     }
 }

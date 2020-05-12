@@ -19,8 +19,8 @@ public class CarService {
         this.repository = repository;
     }
 
-    public Car create(CarRequest request) {
-        Car car = new Car(request.getMake(), request.getModel(), request.getYear(), request.getTrim());
+    public Car create(CarRequest request, UUID userId) {
+        Car car = new Car(request.getMake(), request.getModel(), request.getYear(), request.getTrim(), userId);
         return repository.save(car);
     }
 

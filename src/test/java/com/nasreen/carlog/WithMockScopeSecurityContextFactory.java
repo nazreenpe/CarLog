@@ -17,7 +17,7 @@ public class WithMockScopeSecurityContextFactory implements WithSecurityContextF
   public SecurityContext createSecurityContext(WithMockAuthScope annotation) {
     SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-    User principal = new User(UUID.randomUUID(), "test", "test@gmail.com", "some-password");
+    User principal = new User(UUID.fromString(annotation.userId()), "test", "test@gmail.com", "some-password");
     Authentication auth = new UsernamePasswordAuthenticationToken(principal,
             "Fake",
             List.of(new SimpleGrantedAuthority("ROLE_USER")));

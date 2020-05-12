@@ -8,11 +8,13 @@ public class Car {
     private Integer year;
     private String trim;
     private UUID id;
+    private UUID userId;
 
     public Car() {
     }
 
-    public Car(String make, String model, Integer year, String trim) {
+    public Car(String make, String model, Integer year, String trim, UUID userId) {
+        this.userId = userId;
         this.id = UUID.randomUUID();
         this.make = make;
         this.model = model;
@@ -20,12 +22,13 @@ public class Car {
         this.trim = trim;
     }
 
-    public Car(UUID id, String make, String model, int year, String trim) {
+    public Car(UUID id, String make, String model, int year, String trim, UUID userId) {
         this.id = id;
         this.make = make;
         this.model = model;
         this.year = year;
         this.trim = trim;
+        this.userId = userId;
     }
 
     public String getMake() {
@@ -62,5 +65,9 @@ public class Car {
 
     public void setTrim(String trim) {
         this.trim = trim;
+    }
+
+    public UUID getUserId() {
+        return userId;
     }
 }
