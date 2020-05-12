@@ -3,6 +3,8 @@ import { Redirect, NavLink } from 'react-router-dom'
 import {
   Button, Form, Grid, Header, Image, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 class RecordForm extends React.Component {
   constructor(props) {
@@ -19,10 +21,10 @@ class RecordForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event, input) {
-    console.log("Setting value to", event.target.value);
-    let name = event.target.name;
-    let value = event.target.value;
+  handleChange(event, data) {
+    console.log("Setting value to", data.value);
+    let name = data.name;
+    let value = data.value;
     this.setState({ [name]: value });
   }
 
@@ -77,9 +79,7 @@ class RecordForm extends React.Component {
           <Grid.Column style={{ maxWidth: 450 }}>
             <Form size='large' onSubmit={this.handleSubmit}>
               <Segment stacked>
-                <Form.Input fluid icon='calendar'
-                  iconPosition='left'
-                  placeholder='Date'
+                <SemanticDatepicker
                   name="date"
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
