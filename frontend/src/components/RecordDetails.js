@@ -70,7 +70,7 @@ class RecordDetails extends React.Component {
           icon="left arrow"
           labelPosition='left'
           as={NavLink}
-          to={"/dashboard"}
+          to={"/dashboard/cars/" + carId}
           push={true}
         />
         <Button

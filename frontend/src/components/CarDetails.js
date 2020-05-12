@@ -8,6 +8,8 @@ import {
   Divider
 } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom'
+import RecordEditForm from './RecordEditForm';
+import RecordForm from './RecordForm';
 
 
 
@@ -19,8 +21,19 @@ class CarDetails extends React.Component {
       id: props.id,
       car: {},
       hasLoaded: false,
-      records: []
+      records: [],
+      showRecordForm: false
     };
+    this.displayRecordForm = this.displayRecordForm.bind(this)
+    this.hideRecordForm = this.hideRecordForm.bind(this)
+  }
+
+  displayRecordForm() {
+    this.setState({ showRecordForm: true })
+  }
+
+  hideRecordForm() {
+    this.setState({ showRecordForm: false })
   }
 
   componentDidMount() {
@@ -87,10 +100,19 @@ class CarDetails extends React.Component {
         <Header as="h2">{this.state.records.length} Records</Header>
         <Button
           positive
-          as={NavLink}
-          to={"/dashboard/cars/" + car.id + "/mrs/new"}
+          onClick={this.displayRecordForm}
           content="Add a Record"
         />
+        {
+          this.state.showRecordForm ?
+            (<div><Button content="Cancel"
+              icon="trash"
+              negative
+              labelPosition='left'
+              onClick={this.hideRecordForm}
+            />
+              <RecordForm carId={this.state.id} /> </div>) : <div />
+        }
         <Divider />
         <Grid divided='vertically'>
           {this.state.records.map(record => {
