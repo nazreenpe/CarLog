@@ -15,6 +15,9 @@ public class UserCreateRequest {
     @Length(min = 10)
     private String password;
 
+    public UserCreateRequest() {
+    }
+
     public UserCreateRequest(String name, String emailId, String password) {
         this.name = name;
         this.emailId = emailId;
