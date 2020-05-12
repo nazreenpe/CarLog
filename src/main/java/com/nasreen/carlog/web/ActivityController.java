@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +38,8 @@ public class ActivityController {
     public ResponseEntity<Activity> create(
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
-            @RequestBody ActivityCreate request, Authentication authentication) {
+            @Valid @RequestBody ActivityCreate request,
+            Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return carService.get(carId, user.getId())
                 .flatMap(car -> recordService.get(car, recordId)

@@ -21,7 +21,7 @@ public class ActivityService {
     }
 
     public Activity create(UUID recordId, ActivityCreate request) {
-        Activity activity = new Activity(request.getType(), recordId);
+        Activity activity = new Activity(request.getType(), request.getNotes(), recordId);
         repository.save(activity);
         return activity;
     }
@@ -37,7 +37,8 @@ public class ActivityService {
     public Optional<Activity> update(UUID recordId, UUID id, ActivityUpdate request) {
         return repository.findById(recordId, id)
                 .flatMap(activity -> {
-                    request.getType().ifPresent(updateType -> activity.setType(updateType));
+                    request.getNotes().ifPresent(activity::setNotes);
+                    request.getType().ifPresent(activity::setType);
                     return repository.update(activity);
                 });
     }
