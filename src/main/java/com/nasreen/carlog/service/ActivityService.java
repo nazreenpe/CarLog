@@ -2,8 +2,7 @@ package com.nasreen.carlog.service;
 
 import com.nasreen.carlog.db.ActivityRepository;
 import com.nasreen.carlog.model.Activity;
-import com.nasreen.carlog.request.ActivityCreate;
-import com.nasreen.carlog.request.ActivityUpdate;
+import com.nasreen.carlog.request.ActivityRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class ActivityService {
         this.repository = repository;
     }
 
-    public Activity create(UUID recordId, ActivityCreate request) {
+    public Activity create(UUID recordId, ActivityRequest request) {
         Activity activity = new Activity(request.getType(), request.getNotes(), recordId);
         repository.save(activity);
         return activity;
@@ -34,11 +33,11 @@ public class ActivityService {
         return repository.findById(recordId, id);
     }
 
-    public Optional<Activity> update(UUID recordId, UUID id, ActivityUpdate request) {
+    public Optional<Activity> update(UUID recordId, UUID id, ActivityRequest request) {
         return repository.findById(recordId, id)
                 .flatMap(activity -> {
-                    request.getNotes().ifPresent(activity::setNotes);
-                    request.getType().ifPresent(activity::setType);
+                    activity.setNotes(request.getNotes());
+                    activity.setType(request.getType());
                     return repository.update(activity);
                 });
     }

@@ -7,7 +7,7 @@ import com.nasreen.carlog.model.Activity;
 import com.nasreen.carlog.model.ActivityType;
 import com.nasreen.carlog.model.Car;
 import com.nasreen.carlog.model.Record;
-import com.nasreen.carlog.request.ActivityCreate;
+import com.nasreen.carlog.request.ActivityRequest;
 import com.nasreen.carlog.request.CarRequest;
 import com.nasreen.carlog.request.RecordCreateRequest;
 import com.nasreen.carlog.service.ActivityService;
@@ -81,7 +81,10 @@ class ActivityControllerTest {
         Car car = carService.create(new CarRequest("Toyota", "RAV4", 2020, "XLE"), testUserId);
         this.mockMvc.perform(post(String.format("/api/cars/%s/mrs/%s/as", car.getId(), UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(Map.of("type", "TIRE_ROTATION"))))
+                .content(objectMapper.writeValueAsBytes(Map.of(
+                    "type", "TIRE_ROTATION",
+                    "notes", "Rotated front tyres"
+                ))))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -90,9 +93,9 @@ class ActivityControllerTest {
     public void shouldListAllActivitiesForExistingRecord() throws Exception {
         Car car = carService.create(new CarRequest("Toyota", "RAV4", 2020, "XLE"), testUserId);
         Record record = recordService.create(new RecordCreateRequest(LocalDate.now()), car);
-        Activity activity1 = service.create(record.getId(), new ActivityCreate(ActivityType.REPLACE_WIPER, "dummy note"));
-        Activity activity2 = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION, "dummy note"));
-        Activity activity3 = service.create(record.getId(), new ActivityCreate(ActivityType.OIL_CHANGE, "dummy note"));
+        Activity activity1 = service.create(record.getId(), new ActivityRequest(ActivityType.REPLACE_WIPER, "dummy note"));
+        Activity activity2 = service.create(record.getId(), new ActivityRequest(ActivityType.TIRE_ROTATION, "dummy note"));
+        Activity activity3 = service.create(record.getId(), new ActivityRequest(ActivityType.OIL_CHANGE, "dummy note"));
         this.mockMvc.perform(get(String.format("/api/cars/%s/mrs/%s/as", car.getId(), record.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -119,8 +122,8 @@ class ActivityControllerTest {
     public void shouldFetchAnActivityForExistingRecord() throws Exception {
         Car car = carService.create(new CarRequest("Toyota", "RAV4", 2020, "XLE"), testUserId);
         Record record = recordService.create(new RecordCreateRequest(LocalDate.now()), car);
-        service.create(record.getId(), new ActivityCreate(ActivityType.REPLACE_WIPER, "dummy note"));
-        Activity activity2 = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION, "dummy note"));
+        service.create(record.getId(), new ActivityRequest(ActivityType.REPLACE_WIPER, "dummy note"));
+        Activity activity2 = service.create(record.getId(), new ActivityRequest(ActivityType.TIRE_ROTATION, "dummy note"));
         this.mockMvc.perform(get(String.format("/api/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), activity2.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -136,8 +139,8 @@ class ActivityControllerTest {
     public void shouldNotFetchNonExistingActivity() throws Exception {
         Car car = carService.create(new CarRequest("Toyota", "RAV4", 2020, "XLE"), testUserId);
         Record record = recordService.create(new RecordCreateRequest(LocalDate.now()), car);
-        service.create(record.getId(), new ActivityCreate(ActivityType.REPLACE_WIPER, "dummy note"));
-        Activity activity2 = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION, "dummy note"));
+        service.create(record.getId(), new ActivityRequest(ActivityType.REPLACE_WIPER, "dummy note"));
+        Activity activity2 = service.create(record.getId(), new ActivityRequest(ActivityType.TIRE_ROTATION, "dummy note"));
         this.mockMvc.perform(get(String.format("/api/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -148,11 +151,14 @@ class ActivityControllerTest {
     public void shouldUpdateAnActivityForExistingRecord() throws Exception {
         Car car = carService.create(new CarRequest("Toyota", "Prius", 2020, "XLE"), testUserId);
         Record record = recordService.create(new RecordCreateRequest(LocalDate.now()), car);
-        Activity activity = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION, "dummy note"));
+        Activity activity = service.create(record.getId(), new ActivityRequest(ActivityType.TIRE_ROTATION, "dummy note"));
         ActivityType updatedType = ActivityType.OIL_CHANGE;
         this.mockMvc.perform(put(String.format("/api/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), activity.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(Map.of("type", updatedType))))
+                .content(objectMapper.writeValueAsBytes(Map.of(
+                    "type", updatedType,
+                    "notes", "Rotated back tyres"
+                ))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(result -> {
@@ -169,7 +175,10 @@ class ActivityControllerTest {
         ActivityType updatedType = ActivityType.OIL_CHANGE;
         this.mockMvc.perform(put(String.format("/api/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(Map.of("type", updatedType))))
+                .content(objectMapper.writeValueAsBytes(Map.of(
+                    "type", "TIRE_ROTATION",
+                    "notes", "Rotated front tyres"
+                ))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -178,7 +187,7 @@ class ActivityControllerTest {
     public void shouldDeleteAnExistingActivity() throws Exception {
         Car car = carService.create(new CarRequest("Toyota", "Prius", 2020, "XLE"), testUserId);
         Record record = recordService.create(new RecordCreateRequest(LocalDate.now()), car);
-        Activity activity = service.create(record.getId(), new ActivityCreate(ActivityType.TIRE_ROTATION, "dummy note"));
+        Activity activity = service.create(record.getId(), new ActivityRequest(ActivityType.TIRE_ROTATION, "dummy note"));
         this.mockMvc.perform(delete(String.format("/api/cars/%s/mrs/%s/as/%s", car.getId(), record.getId(), activity.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

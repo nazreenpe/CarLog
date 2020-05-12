@@ -2,8 +2,7 @@ package com.nasreen.carlog.web;
 
 import com.nasreen.carlog.model.Activity;
 import com.nasreen.carlog.model.User;
-import com.nasreen.carlog.request.ActivityCreate;
-import com.nasreen.carlog.request.ActivityUpdate;
+import com.nasreen.carlog.request.ActivityRequest;
 import com.nasreen.carlog.service.ActivityService;
 import com.nasreen.carlog.service.CarService;
 import com.nasreen.carlog.service.RecordService;
@@ -38,7 +37,7 @@ public class ActivityController {
     public ResponseEntity<Activity> create(
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
-            @Valid @RequestBody ActivityCreate request,
+            @Valid @RequestBody ActivityRequest request,
             Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return carService.get(carId, user.getId())
@@ -81,7 +80,7 @@ public class ActivityController {
             @PathVariable UUID carId,
             @PathVariable UUID recordId,
             @PathVariable UUID id,
-            @RequestBody ActivityUpdate request,
+            @RequestBody ActivityRequest request,
             Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return carService.get(carId, user.getId())

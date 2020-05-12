@@ -5,16 +5,16 @@ import com.nasreen.carlog.model.ActivityType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class ActivityCreate {
+public class ActivityRequest {
     @NotNull
     private ActivityType type;
     @NotEmpty
     private String notes;
 
-    public ActivityCreate() {
+    public ActivityRequest() {
     }
 
-    public ActivityCreate(ActivityType type, String notes) {
+    public ActivityRequest(ActivityType type, String notes) {
         this.type = type;
         this.notes = notes;
     }
