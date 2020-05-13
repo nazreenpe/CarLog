@@ -11,6 +11,7 @@ import {
 import { NavLink, Link } from 'react-router-dom'
 import RecordEditForm from './RecordEditForm';
 import handleExpiredSession from './ExpiredSessionHandler';
+import FileUploadButton from './FileUploadButton';
 
 class RecordDetails extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class RecordDetails extends React.Component {
 
     this.showEditForm = this.showEditForm.bind(this)
     this.hideRecordForm = this.hideRecordForm.bind(this)
+    this.handleUpload = this.handleUpload.bind(this)
   }
 
   showEditForm() {
@@ -34,6 +36,11 @@ class RecordDetails extends React.Component {
 
   hideRecordForm() {
     this.setState({ displayEditForm: false })
+  }
+
+  handleUpload(key) {
+    console.log(key)
+    this.setState({uploadedKey: key})
   }
 
   componentDidMount() {
@@ -136,6 +143,8 @@ class RecordDetails extends React.Component {
             </Item>
           })}
         </Item.Group>
+        <FileUploadButton onUpload = { this.handleUpload } />
+
       </Container>
     )
   }
