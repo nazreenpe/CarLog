@@ -10,8 +10,7 @@ import {
 } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom'
 import RecordEditForm from './RecordEditForm';
-
-
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class RecordDetails extends React.Component {
   constructor(props) {
@@ -46,6 +45,7 @@ class RecordDetails extends React.Component {
         "Accept": "application/json"
       }
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -62,6 +62,7 @@ class RecordDetails extends React.Component {
             "Accept": "application/json"
           }
         })
+        .then(handleExpiredSession)
           .then(res => {
             if (!res.ok) {
               throw new Error()

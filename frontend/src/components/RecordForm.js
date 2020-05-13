@@ -5,6 +5,7 @@ import {
 } from 'semantic-ui-react'
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class RecordForm extends React.Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class RecordForm extends React.Component {
         "date": this.state.date,
       })
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()

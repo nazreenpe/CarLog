@@ -10,8 +10,7 @@ import {
 import { NavLink, Link } from 'react-router-dom'
 import RecordEditForm from './RecordEditForm';
 import RecordForm from './RecordForm';
-
-
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class CarDetails extends React.Component {
   constructor(props) {
@@ -44,6 +43,7 @@ class CarDetails extends React.Component {
         "Accept": "application/json"
       }
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -60,18 +60,19 @@ class CarDetails extends React.Component {
             "Accept": "application/json"
           }
         })
-          .then(res => {
-            if (!res.ok) {
-              throw new Error()
-            }
-            return res.json()
-          })
-          .then(records => {
-            this.setState({ records: records })
-          })
-          .catch(error => {
-            this.setState({ failedToCreate: true })
-          })
+        .then(handleExpiredSession)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error()
+          }
+          return res.json()
+        })
+        .then(records => {
+          this.setState({ records: records })
+        })
+        .catch(error => {
+          this.setState({ failedToCreate: true })
+        })
       })
   }
 

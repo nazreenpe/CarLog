@@ -5,6 +5,7 @@ import {
 } from 'semantic-ui-react'
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class RecordEditForm extends React.Component {
   constructor(props) {
@@ -38,6 +39,7 @@ class RecordEditForm extends React.Component {
         'Accept': 'application/json'
       }
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -66,6 +68,7 @@ class RecordEditForm extends React.Component {
         "date": this.state.date,
       })
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()

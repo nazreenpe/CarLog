@@ -3,6 +3,7 @@ import { Redirect, NavLink } from 'react-router-dom'
 import {
   Button, Form, Grid, Header, Image, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class CarForm extends React.Component {
   constructor(props) {
@@ -47,6 +48,7 @@ class CarForm extends React.Component {
         "trim": this.state.trim
       })
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -74,6 +76,7 @@ class CarForm extends React.Component {
         'Accept': 'application/json'
       }
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           return new Error()

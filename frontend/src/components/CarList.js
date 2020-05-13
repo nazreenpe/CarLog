@@ -9,6 +9,7 @@ import {
   Header
 } from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom'
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class CarList extends Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class CarList extends Component {
         "Accept": "application/json"
       }
     })
+    .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
