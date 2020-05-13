@@ -16,7 +16,8 @@ class DocumentUpload extends React.Component {
       description: null,
       path: null,
       filename: null,
-      failedToCreate: false
+      failedToCreate: false,
+      uploadedDoc: null
     }
     this.handleUpload = this.handleUpload.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -43,9 +44,9 @@ class DocumentUpload extends React.Component {
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        path: path, 
+        path: path,
         description: description,
-        filename: filename 
+        filename: filename
       })
     })
       .then(handleExpiredSession)
@@ -65,7 +66,7 @@ class DocumentUpload extends React.Component {
   }
 
   render() {
-    let { uploadedDoc, failedToCreate, carId, recordId } = this.state
+    let { uploadedDoc, failedToCreate, carId, recordId, filename } = this.state
     if (uploadedDoc) {
       return <Redirect to={"/dashboard/cars/" + carId + "/mrs/" + recordId} />
     }
@@ -76,6 +77,9 @@ class DocumentUpload extends React.Component {
 
           <Form size='large' onSubmit={this.handleSubmit}>
             <Segment stacked>
+              { filename === null ? <div />
+                : <Label basic>{this.state.filename}</Label>
+              }      
               <Form.Input
                 placeholder='Description for the document'
                 fluid
@@ -84,8 +88,8 @@ class DocumentUpload extends React.Component {
                 error={failedToCreate}
                 name="description"
               />
-              <Button color='teal' fluid size='large'>
-                Go
+              <Button color='blue' fluid size='large'>
+                Save
               </Button>
             </Segment>
           </Form>

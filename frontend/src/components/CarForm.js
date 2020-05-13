@@ -125,12 +125,12 @@ class CarForm extends React.Component {
               <Segment stacked>
                 <Form.Input fluid icon='book'
                   iconPosition='left'
-                  placeholder='VIN'
+                  placeholder='Enter VIN to load car details'
                   name="vin"
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
-                <Button color='teal' fluid size='large'>
+                <Button color='blue' fluid size='large'>
                   Go
               </Button>
               </Segment>
@@ -169,7 +169,7 @@ class CarForm extends React.Component {
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
-                <Button color='teal' fluid size='large'>
+                <Button color='blue' fluid size='large'>
                   Go
               </Button>
               </Segment>
