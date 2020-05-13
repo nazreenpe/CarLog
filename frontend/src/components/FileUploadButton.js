@@ -37,7 +37,7 @@ const uploadFileToS3 = (presignedUrl, key, file, callback) => {
       return res
     })
     .then(res => {
-      callback(key)
+      callback(key, file.name)
     })
     .catch(error => {
       console.log("Error uploading file")

@@ -166,13 +166,12 @@ class RecordDetails extends React.Component {
           to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/d/new"}
           content="Upload a document"
         />
-        {/* <DocumentUpload carId={carId} recordId={id}/> */}
         <Item.Group link>
           {documents.map(document => {
             return <Item key={document.id}>
               <Item.Image size='tiny' src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg' />
               <Item.Content>
-                <Item.Header>{document.path}</Item.Header>
+                <Item.Header>{document.filename || document.path}</Item.Header>
                 <Item.Description>{document.description}</Item.Description>
               </Item.Content>
             </Item>

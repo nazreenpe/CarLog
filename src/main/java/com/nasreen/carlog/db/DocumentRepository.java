@@ -13,8 +13,8 @@ import java.util.UUID;
 @Repository
 public class DocumentRepository {
     public static final String SELECT_QUERY = "SELECT * FROM documents WHERE record_id = :recordId AND id = :id";
-    public static final String INSERT_QUERY = "INSERT INTO documents(id, path, description, record_id)  " +
-        "VALUES(:id, :path, :description, :recordId)";
+    public static final String INSERT_QUERY = "INSERT INTO documents(id, path, description, record_id, filename)  " +
+        "VALUES(:id, :path, :description, :recordId, :filename)";
     public static final String SELECT_ALL_BY_ID = "SELECT * FROM documents WHERE record_id = :recordId";
     public static final String UPDATE = "UPDATE documents SET description = :description WHERE id = :id";
     public static final String DELETE = "DELETE FROM documents WHERE id = :id";
@@ -30,6 +30,7 @@ public class DocumentRepository {
             handle.createUpdate(INSERT_QUERY)
                 .bind("id", document.getId().toString())
                 .bind("path", document.getPath())
+                .bind("filename", document.getFilename())
                 .bind("description", document.getDescription())
                 .bind("recordId", document.getRecordId().toString())
                 .execute();
@@ -73,6 +74,7 @@ public class DocumentRepository {
         return (rs, ctx) -> new Document(UUID.fromString(rs.getString("id")),
             UUID.fromString(rs.getString("record_id")),
             rs.getString("description"),
-            rs.getString("path"));
+            rs.getString("path"),
+            rs.getString("filename"));
     }
 }

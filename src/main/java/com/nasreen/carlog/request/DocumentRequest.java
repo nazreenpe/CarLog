@@ -1,20 +1,22 @@
 package com.nasreen.carlog.request;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.UUID;
 
 public class DocumentRequest {
     @NotEmpty
     private String description;
     @NotEmpty
     private String path;
+    @NotEmpty
+    private String filename;
 
     public DocumentRequest() {
     }
 
-    public DocumentRequest(String description, String path) {
+    public DocumentRequest(String description, String path, @NotEmpty String filename) {
         this.description = description;
         this.path = path;
+        this.filename = filename;
     }
 
     public String getPath() {
@@ -23,5 +25,9 @@ public class DocumentRequest {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 }

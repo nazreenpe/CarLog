@@ -21,7 +21,7 @@ public class DocumentService {
     }
 
     public Document create(UUID recordId, DocumentRequest request) {
-        Document activity = new Document(request.getDescription(), recordId, request.getPath());
+        Document activity = new Document(request.getDescription(), recordId, request.getPath(), request.getFilename());
         repository.save(activity);
         return activity;
     }

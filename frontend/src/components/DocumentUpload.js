@@ -15,6 +15,7 @@ class DocumentUpload extends React.Component {
       recordId: props.recordId,
       description: null,
       path: null,
+      filename: null,
       failedToCreate: false
     }
     this.handleUpload = this.handleUpload.bind(this)
@@ -22,8 +23,8 @@ class DocumentUpload extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  handleUpload(path) {
-    this.setState({ path: path })
+  handleUpload(path, filename) {
+    this.setState({ path: path, filename: filename })
   }
 
   handleChange(event, input) {
@@ -34,14 +35,18 @@ class DocumentUpload extends React.Component {
   }
 
   handleSubmit() {
-    let { carId, recordId, path, description } = this.state
+    let { carId, recordId, path, description, filename } = this.state
     fetch("/api/cars/" + carId + "/mrs/" + recordId + "/d", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify({ path: path, description: description })
+      body: JSON.stringify({
+        path: path, 
+        description: description,
+        filename: filename 
+      })
     })
       .then(handleExpiredSession)
       .then(res => {
@@ -72,7 +77,7 @@ class DocumentUpload extends React.Component {
           <Form size='large' onSubmit={this.handleSubmit}>
             <Segment stacked>
               <Form.Input
-                placeholder='Select an activity'
+                placeholder='Description for the document'
                 fluid
                 search
                 onChange={this.handleChange}
