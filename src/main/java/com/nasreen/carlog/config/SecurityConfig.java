@@ -27,7 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/manifest.json",
         "/precache-manifest.*.js",
         "/robots.txt",
-        "/static/**");
+        "/static/**",
+        "/");
 
     @Autowired
     public SecurityConfig(AuthFilter authFilter) {
