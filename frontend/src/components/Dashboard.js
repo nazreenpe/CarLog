@@ -25,6 +25,7 @@ import RecordEditForm from './RecordEditForm.js'
 import RecordDetails from './RecordDetails.js'
 import ActivityForm from './ActivityForm.js'
 import DocumentUpload from './DocumentUpload.js';
+import Profile from './Profile.js';
 
 
 class Dashboard extends Component {
@@ -50,7 +51,7 @@ class Dashboard extends Component {
 
             <Dropdown item simple text={currentUser.name}>
               <Dropdown.Menu>
-                <Dropdown.Item as={NavLink} to="/profile">Profile</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to="/dashboard/profile">Profile</Dropdown.Item>
                 <Dropdown.Divider />
                 <Logout />
               </Dropdown.Menu>
@@ -84,6 +85,9 @@ class Dashboard extends Component {
               } />
               <Route exact path="/dashboard/cars/:carId/mrs/:recordId/d/new" render={props =>
                 <DocumentUpload carId={props.match.params.carId} recordId={props.match.params.recordId} />
+              } />
+              <Route exact path="/dashboard/profile" render={props =>
+                <Profile />
               } />
               <Route render={props => <Redirect to="/dashboard" push={true} />} />
             </Switch>
