@@ -12,10 +12,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthFilter authFilter;
+
+    private static List<String> REACT_FILEPATHS =Arrays.asList(
+        "/asset-manifest.json",
+        "/favicon.png",
+        "/index.html",
+        "/manifest.json",
+        "/precache-manifest.*.js",
+        "/robots.txt",
+        "/static/**");
 
     @Autowired
     public SecurityConfig(AuthFilter authFilter) {
@@ -26,8 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**", "/**").permitAll()
-                .antMatchers("/api/**")
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers(REACT_FILEPATHS.toArray(new String[0])).permitAll()
+                .anyRequest()
                 .authenticated()
                 .and()
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
