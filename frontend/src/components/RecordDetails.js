@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   Button,
-  Card,
+  Image,
   Container,
-  Grid,
+  Popup,
   Header,
   Item,
   Divider
@@ -23,11 +23,14 @@ class RecordDetails extends React.Component {
       hasLoaded: false,
       activities: [],
       documents: [],
-      displayEditForm: false
+      displayEditForm: false,
+      showPopup: false,
+      imageToPreview: null
     };
 
     this.showEditForm = this.showEditForm.bind(this)
     this.hideRecordForm = this.hideRecordForm.bind(this)
+    this.wireUpPreview = this.wireUpPreview.bind(this)
   }
 
   showEditForm() {
@@ -36,6 +39,32 @@ class RecordDetails extends React.Component {
 
   hideRecordForm() {
     this.setState({ displayEditForm: false })
+  }
+
+  wireUpPreview(path) {
+    return (event) => {
+      fetch("/api/s3upload/" + path, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+        .then(handleExpiredSession)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error()
+          }
+          return res.json()
+        })
+        .then(res => {
+          this.setState({ imageToPreview: res.url, showPopup: true })
+          console.log(res.url)
+        })
+        .catch(error => {
+          console.log("Error fetching signed URL")
+        })
+    }
   }
 
   componentDidMount() {
@@ -78,26 +107,26 @@ class RecordDetails extends React.Component {
             console.log(error)
           })
 
-          fetch("/api/cars/" + carId + "/mrs/" + id + "/d", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json"
+        fetch("/api/cars/" + carId + "/mrs/" + id + "/d", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }
+        })
+          .then(handleExpiredSession)
+          .then(res => {
+            if (!res.ok) {
+              throw new Error()
             }
+            return res.json()
           })
-            .then(handleExpiredSession)
-            .then(res => {
-              if (!res.ok) {
-                throw new Error()
-              }
-              return res.json()
-            })
-            .then(documents => {
-              this.setState({ documents: documents })
-            })
-            .catch(error => {
-              console.log(error)
-            })
+          .then(documents => {
+            this.setState({ documents: documents })
+          })
+          .catch(error => {
+            console.log(error)
+          })
       })
       .catch(error => {
         console.log(error)
@@ -166,10 +195,18 @@ class RecordDetails extends React.Component {
           to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/d/new"}
           content="Upload a document"
         />
+
+        <Image size="medium"
+          src={this.state.imageToPreview}
+          onClick={() => this.setState({showPopup: false})}
+          hidden={!this.state.showPopup} />
+
         <Item.Group link>
           {documents.map(document => {
-            return <Item key={document.id}>
-              <Item.Image size='tiny' src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg' />
+            return <Item key={document.path} onClick={this.wireUpPreview(document.path)}>
+              <Item.Image size='tiny'
+                src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg'
+              />
               <Item.Content>
                 <Item.Header>{document.filename || document.path}</Item.Header>
                 <Item.Description>{document.description}</Item.Description>

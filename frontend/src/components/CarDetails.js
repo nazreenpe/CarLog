@@ -112,7 +112,7 @@ class CarDetails extends React.Component {
             (<div><Button content="Cancel"
               icon="trash"
               negative
-              labelPosition='left'
+              labelPosition='right'
               onClick={this.hideRecordForm}
             />
               <RecordForm carId={this.state.id} /> </div>) : <div />
