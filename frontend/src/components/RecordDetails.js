@@ -15,6 +15,8 @@ import { NavLink, Link } from 'react-router-dom'
 import RecordEditForm from './RecordEditForm';
 import handleExpiredSession from './ExpiredSessionHandler';
 import DocumentUpload from './DocumentUpload';
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 class RecordDetails extends React.Component {
   constructor(props) {
@@ -28,13 +30,20 @@ class RecordDetails extends React.Component {
       documents: [],
       displayEditForm: false,
       showPopup: false,
-      imageToPreview: null
+      imageToPreview: null,
+      numPages: null,
+      pageNumber: 1,
     };
 
     this.showEditForm = this.showEditForm.bind(this)
     this.hideRecordForm = this.hideRecordForm.bind(this)
     this.wireUpPreview = this.wireUpPreview.bind(this)
     this.handleClosePortal = this.handleClosePortal.bind(this)
+    this.onDocumentLoadSuccess = this.onDocumentLoadSuccess.bind(this)
+  }
+
+  onDocumentLoadSuccess = ({ numPages }) => {
+    this.setState({ numPages });
   }
 
   handleClosePortal() {
@@ -147,6 +156,7 @@ class RecordDetails extends React.Component {
 
   render() {
     let { carId, id, record, activities, documents } = this.state;
+    const { pageNumber, numPages } = this.state;
     return (
       <Container>
         <Header as="h1">Maintenance record for {record.date}</Header>
@@ -213,23 +223,32 @@ class RecordDetails extends React.Component {
         <Portal open={this.state.showPopup}>
           <Segment
             style={{
-              left: '40%',
+              left: '25%',
               position: 'fixed',
-              top: '20%',
+              width: "50%",
+              height: "90%",
+              top: '5%',
               zIndex: 1000,
             }}
           >
-            <Card>
-              <Image
-                src={this.state.imageToPreview} />
-            </Card>
-
             <Button
               icon='close'
               content='Close'
               negative
               onClick={this.handleClosePortal}
             />
+            {
+              this.state.fileType === "pdf" ?
+                <Document file={this.state.imageToPreview}
+                  onLoadError={console.error}
+                  onLoadSuccess={this.onDocumentLoadSuccess}>
+                  <Page pageNumber={pageNumber} />
+                  <p>Page {pageNumber} of {numPages}</p>
+                </Document>
+                :
+                <Image
+                  src={this.state.imageToPreview} width="100%" />
+            }
           </Segment>
         </Portal>
 
