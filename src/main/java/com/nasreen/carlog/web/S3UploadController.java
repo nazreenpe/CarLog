@@ -51,4 +51,15 @@ public class S3UploadController {
         URL url = amazonS3.generatePresignedUrl(request);
         return Map.of("url", url, "key", key);
     }
+
+    @RequestMapping(path = "/delete/{key}", method = RequestMethod.GET)
+    public Map signedUrlForDelete(@PathVariable String  key) {
+        Date expiration = Date.from(Instant.now().plus(1, ChronoUnit.MINUTES));
+
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(awsConfig.getBucket(), key)
+                .withMethod(HttpMethod.DELETE)
+                .withExpiration(expiration);
+        URL url = amazonS3.generatePresignedUrl(request);
+        return Map.of("url", url, "key", key);
+    }
 }

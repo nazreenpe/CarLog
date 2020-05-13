@@ -40,6 +40,7 @@ class RecordDetails extends React.Component {
     this.wireUpPreview = this.wireUpPreview.bind(this)
     this.handleClosePortal = this.handleClosePortal.bind(this)
     this.onDocumentLoadSuccess = this.onDocumentLoadSuccess.bind(this)
+    this.wireUpDelete = this.wireUpDelete.bind(this)
   }
 
   onDocumentLoadSuccess = ({ numPages }) => {
@@ -57,6 +58,57 @@ class RecordDetails extends React.Component {
   hideRecordForm() {
     this.setState({ displayEditForm: false })
   }
+
+  wireUpDelete(document) {
+    return (event) => {
+      fetch("/api/s3upload/delete/" + document.path, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+        .then(handleExpiredSession)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error()
+          }
+          return res.json()
+        })
+        .then(signedUrlRes => {
+          fetch(signedUrlRes.url, {
+            method: "DELETE"
+          })
+            .then(res => {
+              fetch(
+                `/api/cars/${this.state.carId}/mrs/${this.state.id}/d/${document.id}`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                  }
+                })
+                .then(handleExpiredSession)
+                .then(res => {
+                  if (!res.ok) {
+                    throw new Error()
+                  }
+                  let oldDocs = this.state.documents
+                  let indexToDelete = oldDocs.indexOf(document);
+                  if (indexToDelete > -1) {
+                    oldDocs.splice(indexToDelete, 1);
+                    this.setState({documents: oldDocs})
+                  }
+                  return res.json()
+                })
+                .catch(error => console.log(error))
+            }).catch(error => console.log(error))
+        })
+        .catch(error => console.log(error))
+    }
+  }
+
 
   wireUpPreview(path, filename) {
     return (event) => {
@@ -223,7 +275,7 @@ class RecordDetails extends React.Component {
         <Portal open={this.state.showPopup}>
           <Segment
             style={{
-              'overflow-x': 'hidden',
+              overflowX: 'hidden',
               left: '30%',
               position: 'fixed',
               width: "50%",
@@ -262,13 +314,23 @@ class RecordDetails extends React.Component {
           </Segment>
         </Portal>
 
-        <Item.Group link>
+        <Item.Group >
           {documents.map(document => {
-            return <Item key={document.path} onClick={this.wireUpPreview(document.path, document.filename)}>
+            return <Item key={document.path}>
               <Item.Content>
                 <Icon name='file' size='large' color='black' />
-                <Item.Header>{document.filename || document.path}</Item.Header>
+                <Item.Header
+                  onClick={this.wireUpPreview(document.path, document.filename)}
+                  as="a">
+                  {document.filename || document.path}
+                </Item.Header>
                 <Item.Description>{document.description}</Item.Description>
+                <Button
+                  negative
+                  size='tiny'
+                  icon="trash"
+                  onClick={this.wireUpDelete(document)}
+                />
               </Item.Content>
             </Item>
           })}
