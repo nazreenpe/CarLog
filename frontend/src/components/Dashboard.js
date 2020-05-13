@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { NavLink, Redirect, HashRouter, Route } from 'react-router-dom'
+import { NavLink, Redirect, HashRouter, Route, Switch } from 'react-router-dom'
 import {
   Button,
   Container,
@@ -60,29 +60,33 @@ class Dashboard extends Component {
 
         <Container style={{ marginTop: '7em' }}>
           <HashRouter>
-            <Route exact path="/dashboard" component={CarList} />
-            <Route exact path="/dashboard/cars/:id" render={props =>
-              props.match.params.id === 'new'
-                ? <CarForm />
-                : <CarDetails id={props.match.params.id} />
-            } />
-            <Route exact path="/dashboard/cars/:id/edit" render={props =>
-              <CarEditForm id={props.match.params.id} />
-            } />
-            <Route exact path="/dashboard/cars/:carId/mrs/:id" render={props =>
-              props.match.params.id === 'new'
-                ? <RecordForm carId={props.match.params.carId} />
-                : <RecordDetails carId={props.match.params.carId} id={props.match.params.id} />
-            } />
-            <Route exact path="/dashboard/cars/:carId/mrs/:id/edit" render={props =>
-              <RecordEditForm carId={props.match.params.carId} id={props.match.params.id} />
-            } />
-            <Route exact path="/dashboard/cars/:carId/mrs/:recordId/as/new" render={props =>
-              <ActivityForm carId={props.match.params.carId} recordId={props.match.params.recordId} />
-            } />
-            <Route exact path="/dashboard/cars/:carId/mrs/:recordId/d/new" render={props =>
-              <DocumentUpload carId={props.match.params.carId} recordId={props.match.params.recordId} />
-            } />
+            <Switch>
+
+              <Route exact path="/dashboard" component={CarList} />
+              <Route exact path="/dashboard/cars/:id" render={props =>
+                props.match.params.id === 'new'
+                  ? <CarForm />
+                  : <CarDetails id={props.match.params.id} />
+              } />
+              <Route exact path="/dashboard/cars/:id/edit" render={props =>
+                <CarEditForm id={props.match.params.id} />
+              } />
+              <Route exact path="/dashboard/cars/:carId/mrs/:id" render={props =>
+                props.match.params.id === 'new'
+                  ? <RecordForm carId={props.match.params.carId} />
+                  : <RecordDetails carId={props.match.params.carId} id={props.match.params.id} />
+              } />
+              <Route exact path="/dashboard/cars/:carId/mrs/:id/edit" render={props =>
+                <RecordEditForm carId={props.match.params.carId} id={props.match.params.id} />
+              } />
+              <Route exact path="/dashboard/cars/:carId/mrs/:recordId/as/new" render={props =>
+                <ActivityForm carId={props.match.params.carId} recordId={props.match.params.recordId} />
+              } />
+              <Route exact path="/dashboard/cars/:carId/mrs/:recordId/d/new" render={props =>
+                <DocumentUpload carId={props.match.params.carId} recordId={props.match.params.recordId} />
+              } />
+              <Route render={props => <Redirect to="/dashboard" push={true} />} />
+            </Switch>
           </HashRouter>
         </Container>
       </div>
