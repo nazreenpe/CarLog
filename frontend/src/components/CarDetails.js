@@ -3,8 +3,9 @@ import {
   Button,
   Card,
   Container,
-  Grid,
+  Item,
   Header,
+  Icon,
   Divider
 } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom'
@@ -43,7 +44,7 @@ class CarDetails extends React.Component {
         "Accept": "application/json"
       }
     })
-    .then(handleExpiredSession)
+      .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -60,19 +61,19 @@ class CarDetails extends React.Component {
             "Accept": "application/json"
           }
         })
-        .then(handleExpiredSession)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error()
-          }
-          return res.json()
-        })
-        .then(records => {
-          this.setState({ records: records })
-        })
-        .catch(error => {
-          this.setState({ failedToCreate: true })
-        })
+          .then(handleExpiredSession)
+          .then(res => {
+            if (!res.ok) {
+              throw new Error()
+            }
+            return res.json()
+          })
+          .then(records => {
+            this.setState({ records: records })
+          })
+          .catch(error => {
+            this.setState({ failedToCreate: true })
+          })
       })
   }
 
@@ -91,7 +92,7 @@ class CarDetails extends React.Component {
           push={true}
         />
         <Button
-          positive
+          color='blue'
           content="Edit"
           icon="pencil"
           labelPosition='right'
@@ -103,7 +104,7 @@ class CarDetails extends React.Component {
         <Divider />
         <Header as="h2">{this.state.records.length} Records</Header>
         <Button
-          positive
+          color='blue'
           onClick={this.displayRecordForm}
           content="Add a Record"
         />
@@ -118,20 +119,17 @@ class CarDetails extends React.Component {
               <RecordForm carId={this.state.id} /> </div>) : <div />
         }
         <Divider />
-        <Grid divided='vertically'>
+        <Item.Group link>
           {this.state.records.map(record => {
-            return <Grid.Row columns={1}>
-              <Grid.Column>
-                <Card as={NavLink} to={"/dashboard/cars/" + car.id + "/mrs/" + record.id}>
-                  <Card.Content>
-                    <Card.Header>{record.date}</Card.Header>
-                  </Card.Content>
-                </Card>
-              </Grid.Column>
-            </Grid.Row>
+            return <Item key={record.id}
+              as={NavLink} to={"/dashboard/cars/" + car.id + "/mrs/" + record.id}>
+              <Item.Content>
+                <Icon name='folder' size='large' color='black' />
+                <Item.Header>Record: {record.date}</Item.Header>
+              </Item.Content>
+            </Item>
           })}
-        </Grid>
-
+        </Item.Group>
       </Container >
     )
   }

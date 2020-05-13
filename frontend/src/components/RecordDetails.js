@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Button,
   Image,
+  Icon,
   Container,
   Popup,
   Header,
@@ -144,43 +145,45 @@ class RecordDetails extends React.Component {
           labelPosition='left'
           as={NavLink}
           to={"/dashboard/cars/" + carId}
+          size='medium'
           push={true}
         />
         <Button
-          positive
+          color='blue'
           content="Edit"
           icon="pencil"
           labelPosition='right'
-          size='small'
+          size='medium'
           onClick={this.showEditForm}
         />
 
         {
           this.state.displayEditForm ?
             <div>
+
+              <RecordEditForm carId={carId} id={record.id} />
               <Button
-                negative
+                color='grey'
                 icon="trash"
                 onClick={this.hideRecordForm}
                 content="Cancel"
               />
-              <RecordEditForm carId={carId} id={record.id} />
             </div> :
             <div></div>
         }
         <Divider />
-        <Header as="h2">{this.state.activities.length} activities</Header>
+        <Header as="h2">Activities: {this.state.activities.length} </Header>
         <Button
-          positive
+          color='blue'
           as={NavLink}
           to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/as/new"}
           content="Record an activity"
         />
         <Divider />
-        <Item.Group link>
+        <Item.Group>
           {activities.map(activity => {
             return <Item key={activity.id}>
-              <Item.Image size='tiny' src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg' />
+              <Icon name='check circle' size='large' color='black' />
               <Item.Content>
                 <Item.Header>{activity.typeName}</Item.Header>
                 <Item.Description>{activity.notes}</Item.Description>
@@ -188,9 +191,9 @@ class RecordDetails extends React.Component {
             </Item>
           })}
         </Item.Group>
-        <Header as="h2">{this.state.documents.length} documents</Header>
+        <Header as="h2">Documents: {this.state.documents.length}</Header>
         <Button
-          positive
+          color='blue'
           as={NavLink}
           to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/d/new"}
           content="Upload a document"
@@ -198,16 +201,14 @@ class RecordDetails extends React.Component {
 
         <Image size="medium"
           src={this.state.imageToPreview}
-          onClick={() => this.setState({showPopup: false})}
+          onClick={() => this.setState({ showPopup: false })}
           hidden={!this.state.showPopup} />
 
         <Item.Group link>
           {documents.map(document => {
             return <Item key={document.path} onClick={this.wireUpPreview(document.path)}>
-              <Item.Image size='tiny'
-                src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg'
-              />
               <Item.Content>
+                <Icon name='file' size='large' color='black' />
                 <Item.Header>{document.filename || document.path}</Item.Header>
                 <Item.Description>{document.description}</Item.Description>
               </Item.Content>

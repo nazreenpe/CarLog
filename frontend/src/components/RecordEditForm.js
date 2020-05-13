@@ -110,7 +110,7 @@ class RecordEditForm extends React.Component {
                 onChange={this.handleChange}
                 error={this.state.failedToCreate}
               />
-              <Button content="Submit" color='teal' size='large' />
+              <Button content="Submit" color='blue' size='medium' />
             </Form>
           </Segment>
         </Grid.Column>
