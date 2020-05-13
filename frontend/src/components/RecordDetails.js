@@ -164,7 +164,7 @@ class RecordDetails extends React.Component {
               <RecordEditForm carId={carId} id={record.id} />
               <Button
                 color='grey'
-                icon="trash"
+                icon="cancel"
                 onClick={this.hideRecordForm}
                 content="Cancel"
               />

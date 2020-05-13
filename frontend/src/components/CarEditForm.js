@@ -155,7 +155,7 @@ class CarEditForm extends React.Component {
         />
 
         <Button content={"Delete"}
-          negative
+          color='red'
           icon="trash"
           labelPosition='left'
           onClick={this.confirmDelete}
@@ -202,8 +202,8 @@ class CarEditForm extends React.Component {
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                 />
-                <Button color='teal' fluid size='large'>
-                  Go
+                <Button color='blue' fluid size='large'>
+                  Save
               </Button>
               </Segment>
             </Form>
