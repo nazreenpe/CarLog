@@ -22,6 +22,7 @@ class RecordDetails extends React.Component {
       record: {},
       hasLoaded: false,
       activities: [],
+      documents: [],
       displayEditForm: false
     };
 
@@ -82,6 +83,27 @@ class RecordDetails extends React.Component {
           .catch(error => {
             console.log(error)
           })
+
+          fetch("/api/cars/" + carId + "/mrs/" + id + "/d", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            }
+          })
+            .then(handleExpiredSession)
+            .then(res => {
+              if (!res.ok) {
+                throw new Error()
+              }
+              return res.json()
+            })
+            .then(documents => {
+              this.setState({ documents: documents })
+            })
+            .catch(error => {
+              console.log(error)
+            })
       })
       .catch(error => {
         console.log(error)
@@ -89,7 +111,7 @@ class RecordDetails extends React.Component {
   }
 
   render() {
-    let { carId, record, activities } = this.state;
+    let { carId, record, activities, documents } = this.state;
     return (
       <Container>
         <Header as="h1">Maintenance record for {record.date}</Header>
@@ -143,7 +165,19 @@ class RecordDetails extends React.Component {
             </Item>
           })}
         </Item.Group>
-        <FileUploadButton onUpload = { this.handleUpload } />
+        <Divider />
+        <Item.Group link>
+          {documents.map(document => {
+            return <Item key={document.id}>
+              <Item.Image size='tiny' src='https://react.semantic-ui.com/images/avatar/large/stevie.jpg' />
+              <Item.Content>
+                <Item.Header>{document.path}</Item.Header>
+                <Item.Description>{document.description}</Item.Description>
+              </Item.Content>
+            </Item>
+          })}
+        </Item.Group>
+        <FileUploadButton onUpload={this.handleUpload} />
 
       </Container>
     )
