@@ -24,6 +24,7 @@ import RecordForm from './RecordForm.js'
 import RecordEditForm from './RecordEditForm.js'
 import RecordDetails from './RecordDetails.js'
 import ActivityForm from './ActivityForm.js'
+import DocumentUpload from './DocumentUpload.js';
 
 
 class Dashboard extends Component {
@@ -78,6 +79,9 @@ class Dashboard extends Component {
             } />
             <Route exact path="/dashboard/cars/:carId/mrs/:recordId/as/new" render={props =>
               <ActivityForm carId={props.match.params.carId} recordId={props.match.params.recordId} />
+            } />
+            <Route exact path="/dashboard/cars/:carId/mrs/:recordId/d/new" render={props =>
+              <DocumentUpload carId={props.match.params.carId} recordId={props.match.params.recordId} />
             } />
           </HashRouter>
         </Container>

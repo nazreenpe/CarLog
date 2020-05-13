@@ -11,7 +11,7 @@ import {
 import { NavLink, Link } from 'react-router-dom'
 import RecordEditForm from './RecordEditForm';
 import handleExpiredSession from './ExpiredSessionHandler';
-import FileUploadButton from './FileUploadButton';
+import DocumentUpload from './DocumentUpload';
 
 class RecordDetails extends React.Component {
   constructor(props) {
@@ -28,7 +28,6 @@ class RecordDetails extends React.Component {
 
     this.showEditForm = this.showEditForm.bind(this)
     this.hideRecordForm = this.hideRecordForm.bind(this)
-    this.handleUpload = this.handleUpload.bind(this)
   }
 
   showEditForm() {
@@ -37,11 +36,6 @@ class RecordDetails extends React.Component {
 
   hideRecordForm() {
     this.setState({ displayEditForm: false })
-  }
-
-  handleUpload(key) {
-    console.log(key)
-    this.setState({uploadedKey: key})
   }
 
   componentDidMount() {
@@ -53,7 +47,7 @@ class RecordDetails extends React.Component {
         "Accept": "application/json"
       }
     })
-    .then(handleExpiredSession)
+      .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -70,7 +64,7 @@ class RecordDetails extends React.Component {
             "Accept": "application/json"
           }
         })
-        .then(handleExpiredSession)
+          .then(handleExpiredSession)
           .then(res => {
             if (!res.ok) {
               throw new Error()
@@ -111,7 +105,7 @@ class RecordDetails extends React.Component {
   }
 
   render() {
-    let { carId, record, activities, documents } = this.state;
+    let { carId, id, record, activities, documents } = this.state;
     return (
       <Container>
         <Header as="h1">Maintenance record for {record.date}</Header>
@@ -165,7 +159,14 @@ class RecordDetails extends React.Component {
             </Item>
           })}
         </Item.Group>
-        <Divider />
+        <Header as="h2">{this.state.documents.length} documents</Header>
+        <Button
+          positive
+          as={NavLink}
+          to={"/dashboard/cars/" + carId + "/mrs/" + record.id + "/d/new"}
+          content="Upload a document"
+        />
+        {/* <DocumentUpload carId={carId} recordId={id}/> */}
         <Item.Group link>
           {documents.map(document => {
             return <Item key={document.id}>
@@ -177,8 +178,6 @@ class RecordDetails extends React.Component {
             </Item>
           })}
         </Item.Group>
-        <FileUploadButton onUpload={this.handleUpload} />
-
       </Container>
     )
   }
