@@ -69,6 +69,9 @@ class CarDetails extends React.Component {
           .then(records => {
             this.setState({ records: records })
           })
+          .catch(error => {
+            this.setState({ failedToCreate: true })
+          })
       })
   }
 

@@ -71,6 +71,12 @@ class RecordDetails extends React.Component {
           .then(activities => {
             this.setState({ activities: activities })
           })
+          .catch(error => {
+            console.log(error)
+          })
+      })
+      .catch(error => {
+        console.log(error)
       })
   }
 

@@ -56,6 +56,9 @@ class CarEditForm extends React.Component {
         })
         console.log(car)
       })
+      .catch(error => {
+        this.setState({ failedToCreate: true })
+      })
   }
 
   handleChange(event, input) {
