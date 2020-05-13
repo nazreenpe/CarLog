@@ -4,10 +4,12 @@ import {
   Image,
   Icon,
   Container,
-  Popup,
+  Portal,
+  Segment,
   Header,
   Item,
-  Divider
+  Divider,
+  Card
 } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom'
 import RecordEditForm from './RecordEditForm';
@@ -32,6 +34,11 @@ class RecordDetails extends React.Component {
     this.showEditForm = this.showEditForm.bind(this)
     this.hideRecordForm = this.hideRecordForm.bind(this)
     this.wireUpPreview = this.wireUpPreview.bind(this)
+    this.handleClosePortal = this.handleClosePortal.bind(this)
+  }
+
+  handleClosePortal() {
+    this.setState({ showPopup: false })
   }
 
   showEditForm() {
@@ -42,7 +49,7 @@ class RecordDetails extends React.Component {
     this.setState({ displayEditForm: false })
   }
 
-  wireUpPreview(path) {
+  wireUpPreview(path, filename) {
     return (event) => {
       fetch("/api/s3upload/" + path, {
         method: "GET",
@@ -59,7 +66,11 @@ class RecordDetails extends React.Component {
           return res.json()
         })
         .then(res => {
-          this.setState({ imageToPreview: res.url, showPopup: true })
+          this.setState({
+            imageToPreview: res.url,
+            showPopup: true,
+            fileType: filename ? filename.split(".").pop() : "jpeg"
+          })
           console.log(res.url)
         })
         .catch(error => {
@@ -199,14 +210,32 @@ class RecordDetails extends React.Component {
           content="Upload a document"
         />
 
-        <Image size="medium"
-          src={this.state.imageToPreview}
-          onClick={() => this.setState({ showPopup: false })}
-          hidden={!this.state.showPopup} />
+        <Portal open={this.state.showPopup}>
+          <Segment
+            style={{
+              left: '40%',
+              position: 'fixed',
+              top: '20%',
+              zIndex: 1000,
+            }}
+          >
+            <Card>
+              <Image
+                src={this.state.imageToPreview} />
+            </Card>
+
+            <Button
+              icon='close'
+              content='Close'
+              negative
+              onClick={this.handleClosePortal}
+            />
+          </Segment>
+        </Portal>
 
         <Item.Group link>
           {documents.map(document => {
-            return <Item key={document.path} onClick={this.wireUpPreview(document.path)}>
+            return <Item key={document.path} onClick={this.wireUpPreview(document.path, document.filename)}>
               <Item.Content>
                 <Icon name='file' size='large' color='black' />
                 <Item.Header>{document.filename || document.path}</Item.Header>
