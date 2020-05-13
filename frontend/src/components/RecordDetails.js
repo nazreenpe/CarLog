@@ -223,11 +223,12 @@ class RecordDetails extends React.Component {
         <Portal open={this.state.showPopup}>
           <Segment
             style={{
-              left: '25%',
+              'overflow-x': 'hidden',
+              left: '30%',
               position: 'fixed',
               width: "50%",
-              height: "90%",
-              top: '5%',
+              height: "70%",
+              top: '10%',
               zIndex: 1000,
             }}
           >
@@ -242,8 +243,17 @@ class RecordDetails extends React.Component {
                 <Document file={this.state.imageToPreview}
                   onLoadError={console.error}
                   onLoadSuccess={this.onDocumentLoadSuccess}>
-                  <Page pageNumber={pageNumber} />
-                  <p>Page {pageNumber} of {numPages}</p>
+                  {
+                    Array.from(
+                      new Array(numPages),
+                      (el, index) => (
+                        <Page
+                          key={`page_${index + 1}`}
+                          pageNumber={index + 1}
+                        />
+                      ),
+                    )
+                  }
                 </Document>
                 :
                 <Image
