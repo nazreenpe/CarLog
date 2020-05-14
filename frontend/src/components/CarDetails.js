@@ -112,7 +112,7 @@ class CarDetails extends React.Component {
           push={true}
         />
         <Divider />
-        <Header as="h2">{this.state.records.length} Records</Header>
+        <Header as="h2">Records: {this.state.records.length} </Header>
         <Button
           color='blue'
           onClick={this.displayRecordForm}
