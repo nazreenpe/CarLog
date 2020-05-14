@@ -60,12 +60,13 @@ const styles = StyleSheet.create({
   },
   activityHeader: {
     marginLeft: 16,
+    marginBottom: 10,
     fontSize: 14,
     textAlign: 'justify',
     fontFamily: 'Times-Roman'
   },
   activityName: {
-    marginLeft: 16,
+    marginLeft: 18,
     fontSize: 14,
     textAlign: 'justify',
     fontFamily: 'Times-Roman'
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Times-Roman'
   },
   documentHeader: {
+    marginTop: 30,
     marginLeft: 16,
     fontSize: 14,
     textAlign: 'justify',
