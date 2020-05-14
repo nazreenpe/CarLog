@@ -23,7 +23,8 @@ public enum ActivityType {
     CHECK_TIMING_BELT_CHAIN("Check the timing belt / chain"),
     REPLACE_TIMING_BELT_CHAIN("Replace the timing belt / chain"),
     CHECK_ERROR_CODES("Check error codes"),
-    REPLACE_AC_FILTER("Replace AC filter");
+    REPLACE_AC_FILTER("Replace AC filter"),
+    OTHER("Other");
 
     private String publicName;
 
