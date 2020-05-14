@@ -14,10 +14,12 @@ import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 import handleExpiredSession from './ExpiredSessionHandler';
 import { recordExpression } from '@babel/types';
 
+
 Font.register({
   family: 'Oswald',
   src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf'
 });
+
 
 const styles = StyleSheet.create({
   body: {
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
   },
   recordHeader: {
     margin: 12,
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'justify',
     fontFamily: 'Oswald'
   },
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
   activityHeader: {
     marginLeft: 16,
     marginBottom: 10,
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'justify',
     fontFamily: 'Times-Roman'
   },
@@ -166,7 +168,7 @@ class PdfExport extends React.Component {
                 {
                   rE.activities.map(activity => {
                     return <View>
-                      <Text style={styles.activityName}>✔ {activity.typeName}</Text>
+                      <Text style={styles.activityName}> {activity.typeName}</Text>
                       <Text style={styles.activityDescription}>- {activity.notes}</Text>
                     </View>
                   })

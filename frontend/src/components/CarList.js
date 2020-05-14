@@ -29,7 +29,7 @@ class CarList extends Component {
         "Accept": "application/json"
       }
     })
-    .then(handleExpiredSession)
+      .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
@@ -55,7 +55,6 @@ class CarList extends Component {
           <Card as={NavLink} to={"/dashboard/cars/" + car.id}
             image="/favicon.png"
             header={car.year + " " + car.make + " " + car.model + " " + car.trim}
-            meta={"Vin number=Todo"}
           />
         </Grid.Column>
       })
@@ -72,7 +71,7 @@ class CarList extends Component {
         to="/dashboard/cars/new"
         push={true} />
       <Divider />
-      <Loader inline active={!this.state.hasLoaded} content="Loading ..."/>
+      <Loader inline active={!this.state.hasLoaded} content="Loading ..." />
       <Grid divided="vertically">
         {rows}
       </Grid>
