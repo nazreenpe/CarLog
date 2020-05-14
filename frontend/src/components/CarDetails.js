@@ -101,6 +101,16 @@ class CarDetails extends React.Component {
           to={"/dashboard/cars/" + car.id + "/edit"}
           push={true}
         />
+        <Button
+          color='blue'
+          content="Export"
+          icon="send"
+          labelPosition='right'
+          size='small'
+          as={Link}
+          to={"/dashboard/cars/" + car.id + "/export"}
+          push={true}
+        />
         <Divider />
         <Header as="h2">{this.state.records.length} Records</Header>
         <Button

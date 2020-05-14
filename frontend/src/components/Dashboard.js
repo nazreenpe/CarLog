@@ -26,6 +26,7 @@ import RecordDetails from './RecordDetails.js'
 import ActivityForm from './ActivityForm.js'
 import DocumentUpload from './DocumentUpload.js';
 import Profile from './Profile.js';
+import PdfExport from './PdfExport.js';
 
 
 class Dashboard extends Component {
@@ -85,6 +86,9 @@ class Dashboard extends Component {
               } />
               <Route exact path="/dashboard/cars/:carId/mrs/:recordId/d/new" render={props =>
                 <DocumentUpload carId={props.match.params.carId} recordId={props.match.params.recordId} />
+              } />
+              <Route exact path="/dashboard/cars/:carId/export" render={props =>
+                <PdfExport carId={props.match.params.carId} />
               } />
               <Route exact path="/dashboard/profile" render={props =>
                 <Profile />
