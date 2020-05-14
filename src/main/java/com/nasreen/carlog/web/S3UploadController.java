@@ -4,6 +4,8 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.nasreen.carlog.auth.AwsConfig;
+import com.nasreen.carlog.service.AwsSignedUrlService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,45 +23,29 @@ import java.util.UUID;
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
 public class S3UploadController {
-    private final AwsConfig awsConfig;
-    private final AmazonS3 amazonS3;
+    private AwsSignedUrlService signedUrlService;
 
-    public S3UploadController(AwsConfig awsConfig, AmazonS3 amazonS3) {
-        this.awsConfig = awsConfig;
-        this.amazonS3 = amazonS3;
+    @Autowired
+    public S3UploadController(AwsSignedUrlService signedUrlService) {
+        this.signedUrlService = signedUrlService;
     }
 
     @RequestMapping(path = "", method = RequestMethod.GET)
     public Map signedUrl() {
         String objectKey = UUID.randomUUID().toString();
-        Date expiration = Date.from(Instant.now().plus(1, ChronoUnit.MINUTES));
-
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(awsConfig.getBucket(), objectKey)
-            .withMethod(HttpMethod.PUT)
-            .withExpiration(expiration);
-        URL url = amazonS3.generatePresignedUrl(request);
+        URL url = signedUrlService.generateUrl(objectKey, HttpMethod.PUT);
         return Map.of("url", url, "key", objectKey);
     }
 
     @RequestMapping(path = "/{key}", method = RequestMethod.GET)
     public Map signedUrl(@PathVariable String  key) {
-        Date expiration = Date.from(Instant.now().plus(1, ChronoUnit.MINUTES));
-
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(awsConfig.getBucket(), key)
-                .withMethod(HttpMethod.GET)
-                .withExpiration(expiration);
-        URL url = amazonS3.generatePresignedUrl(request);
+        URL url = signedUrlService.generateUrl(key, HttpMethod.GET);
         return Map.of("url", url, "key", key);
     }
 
     @RequestMapping(path = "/delete/{key}", method = RequestMethod.GET)
     public Map signedUrlForDelete(@PathVariable String  key) {
-        Date expiration = Date.from(Instant.now().plus(1, ChronoUnit.MINUTES));
-
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(awsConfig.getBucket(), key)
-                .withMethod(HttpMethod.DELETE)
-                .withExpiration(expiration);
-        URL url = amazonS3.generatePresignedUrl(request);
+        URL url = signedUrlService.generateUrl(key, HttpMethod.DELETE);
         return Map.of("url", url, "key", key);
     }
 }
