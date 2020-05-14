@@ -3,6 +3,7 @@ import { Redirect, NavLink } from 'react-router-dom'
 import {
   Button, Form, Grid, Dropdown, TextArea, Message, Segment, Label, Container, Divider
 } from 'semantic-ui-react'
+import handleExpiredSession from './ExpiredSessionHandler';
 
 class ActivityForm extends React.Component {
   constructor(props) {
@@ -15,15 +16,45 @@ class ActivityForm extends React.Component {
       notes: null,
       createdActivity: null,
       failedToCreate: false,
-      validActivities: [
-        { key: "OIL_CHANGE", value: "OIL_CHANGE", text: "Oil Change" },
-        { key: "TIRE_ROTATION", value: "TIRE_ROTATION", text: "Tire Rotation" },
-        { key: "REPLACE_WIPER", value: "REPLACE_WIPER", text: "Replace Wiper" },
-      ]
+      validActivities: []
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/api/data/activityTypes', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(handleExpiredSession)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error()
+        }
+        return res.json()
+      })
+      .then(actvityTypes => {
+        let validActivities = []
+        for (var key in actvityTypes) {
+          if (actvityTypes.hasOwnProperty(key)) {
+            validActivities.push({
+              key: key,
+              value: key,
+              text: actvityTypes[key]
+            })
+          }
+        }
+        validActivities = validActivities.sort((a, b) =>  (a.text > b.text) ? 1 : -1)
+        this.setState({validActivities: validActivities})
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   handleChange(event, input) {
@@ -48,6 +79,7 @@ class ActivityForm extends React.Component {
         notes: this.state.notes
       })
     })
+      .then(handleExpiredSession)
       .then(res => {
         if (!res.ok) {
           throw new Error()
