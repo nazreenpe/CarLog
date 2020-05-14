@@ -120,13 +120,7 @@ class CarDetails extends React.Component {
         />
         {
           this.state.showRecordForm ?
-            (<div><Button content="Cancel"
-              icon="trash"
-              negative
-              labelPosition='right'
-              onClick={this.hideRecordForm}
-            />
-              <RecordForm carId={this.state.id} /> </div>) : <div />
+            <RecordForm carId={this.state.id} /> : <div />
         }
         <Divider />
         <Item.Group link>

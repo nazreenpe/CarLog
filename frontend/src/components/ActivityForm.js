@@ -132,8 +132,8 @@ class ActivityForm extends React.Component {
                   onChange={this.handleChange}
                   error={this.state.failedToCreate}
                   placeholder='Notes' />
-                <Button color='teal' fluid size='large'>
-                  Go
+                <Button color='blue' fluid size='medium'>
+                  Save
               </Button>
               </Segment>
             </Form>
