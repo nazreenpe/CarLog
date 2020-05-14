@@ -46,8 +46,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Oswald'
   },
+  recordHeader: {
+    margin: 12,
+    fontSize: 16,
+    textAlign: 'justify',
+    fontFamily: 'Oswald'
+  },
   text: {
     margin: 12,
+    fontSize: 14,
+    textAlign: 'justify',
+    fontFamily: 'Times-Roman'
+  },
+  activityHeader: {
+    marginLeft: 16,
+    fontSize: 14,
+    textAlign: 'justify',
+    fontFamily: 'Times-Roman'
+  },
+  activityName: {
+    marginLeft: 16,
+    fontSize: 14,
+    textAlign: 'justify',
+    fontFamily: 'Times-Roman'
+  },
+  activityDescription: {
+    marginLeft: 20,
+    fontSize: 14,
+    textAlign: 'justify',
+    fontFamily: 'Times-Roman'
+  },
+  documentHeader: {
+    marginLeft: 16,
     fontSize: 14,
     textAlign: 'justify',
     fontFamily: 'Times-Roman'
@@ -55,6 +85,11 @@ const styles = StyleSheet.create({
   image: {
     marginVertical: 15,
     marginHorizontal: 100,
+  },
+  imageCaption: {
+    fontSize: 14,
+    textAlign: 'center',
+    fontFamily: 'Times-Roman'
   },
   header: {
     fontSize: 12,
@@ -120,24 +155,26 @@ class PdfExport extends React.Component {
           </Text>
           <Text style={styles.title}>{exportData.car.year} {exportData.car.make}</Text>
           <Text style={styles.subtitleCenter}>{exportData.car.model} {exportData.car.trim}</Text>
-          <Text style={styles.author}>{exportData.user.name}</Text>
+          <Text style={styles.author}>Owner: {exportData.user.name}</Text>
           {
             exportData.records.map(rE => {
               return <View>
-                <Text style={styles.text}>Record for {rE.record.date}</Text>
+                <Text style={styles.recordHeader}>Record for {rE.record.date}</Text>
+                <Text style={styles.activityHeader}>Activities performed:</Text>
                 {
                   rE.activities.map(activity => {
                     return <View>
-                      <Text style={styles.text}>{activity.typeName}</Text>
-                      <Text style={styles.text}>{activity.notes}</Text>
+                      <Text style={styles.activityName}>✔ {activity.typeName}</Text>
+                      <Text style={styles.activityDescription}>- {activity.notes}</Text>
                     </View>
                   })
                 }
+                <Text style={styles.documentHeader}>Documents:</Text>
                 {
                   rE.documents.map(document => {
                     return <View>
-                      <Image style={styles.image} src={document.url}/>
-                      <Text style={styles.text}>{document.description}</Text>
+                      <Image style={styles.image} src={document.url} />
+                      <Text style={styles.imageCaption}>{document.description}</Text>
                     </View>
                   })
                 }
