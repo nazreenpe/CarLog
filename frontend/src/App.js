@@ -4,7 +4,6 @@ import 'semantic-ui-css/semantic.min.css'
 import { HashRouter, Route, Redirect, Switch } from "react-router-dom"
 import AppLayout from './components/AppLayout.js'
 import Dashboard from './components/Dashboard.js'
-import Logout from './components/Logout.js'
 
 function App() {
   return (

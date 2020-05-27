@@ -3,12 +3,8 @@ import React, { Component } from 'react'
 import {
   Button,
   Container,
-  Divider,
-  Grid,
   Header,
   Icon,
-  Image,
-  List,
   Menu,
   Responsive,
   Segment,
@@ -139,8 +135,7 @@ DesktopContainer.propTypes = {
 
 class MobileContainer extends Component {
   state = {}
-// sidebar toggle and hide could be jst one function
-// default value for state (141) initialize in the beginning itself.
+  
   handleSidebarHide = () => this.setState({ sidebarOpened: false })
 
   handleToggle = () => this.setState({ sidebarOpened: true })
@@ -222,22 +217,8 @@ ResponsiveContainer.propTypes = {
 
 const AppLayout = () => (
   <HashRouter>
-    <ResponsiveContainer>
-      <Segment inverted vertical style={{ padding: '5em 0em' }}>
-        <Container>
-          <Grid divided inverted stackable>
-            <Grid.Row>
-              <Grid.Column>
-                <Header as='h4' inverted>
-                  Footer Header
-              </Header>
-                <p>
-                  Extra space for a call to action inside the footer that could help re-engage users.
-              </p>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Container>
+    <ResponsiveContainer >
+      <Segment inverted vertical style={{ padding: '25em 0em' }}>  
       </Segment>
     </ResponsiveContainer>
   </HashRouter>

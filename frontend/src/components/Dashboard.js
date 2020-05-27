@@ -1,19 +1,10 @@
 import React, { Component } from 'react'
 import { NavLink, Redirect, HashRouter, Route, Switch } from 'react-router-dom'
 import {
-  Button,
   Container,
   Dropdown,
-  Form,
-  Grid,
-  Header,
   Image,
-  List,
-  Divider,
   Menu,
-  Message,
-  Segment,
-  Label
 } from 'semantic-ui-react'
 import Logout from './Logout.js'
 import CarList from './CarList.js'
@@ -30,10 +21,7 @@ import PdfExport from './PdfExport.js';
 
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props)
-  }
-
+ 
   render() {
     let userJson = localStorage.getItem("currentUser")
     if (!userJson) {
