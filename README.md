@@ -11,6 +11,8 @@ Allows users to:
  ## Stacks Used
  - Java Spring Boot on BackEnd
  - React JS on Frontend
+
+ The app can be viewed at https://getcarlog.herokuapp.com/
 ## Setup instructions
 #### Install Java if it is not present in your mac
 * Install Brew, if it is not present
