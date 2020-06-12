@@ -11,7 +11,7 @@ Allows users to:
  ## Stacks Used
  - Java Spring Boot on BackEnd
  - React JS on Frontend
-## Run the App
+## Setup instructions
 #### Install Java if it is not present in your mac
 * Install Brew, if it is not present
 
@@ -33,7 +33,32 @@ Allows users to:
 
 `# which java`
 
+#### Set up the database with Postgres:
 
-#### The App can be build and run using gradle, with the following command in the CLI, from the root project directory
+* createdb carlog
 
-`./gradlew clean bootRun`
+* Setup the following environmental variables:
+  * DB_URL
+  * DB_USER
+  * DB_PASSWORD
+  * AWS_SECRET_ACCESS_KEY
+  * AWS_ACCESS_KEY_ID
+
+#### Install frontend dependencies and build
+
+* cd frontend
+
+* npm install
+
+* npm run-script build 
+
+
+#### The backend of App can be build using gradle. Then run the app with the following command in the CLI, from the root project directory
+
+* cd ..
+
+* export the enivronmental variables (DB_URL, DB_USER, DB_PASSWORD, AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID)
+
+* `./gradlew clean bootRun`
+
+The app will be run in production mode at http://localhost:8080/
