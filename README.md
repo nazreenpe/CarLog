@@ -1,5 +1,7 @@
 # CarLog
 
+_Checkout the app demo video [here](https://github.com/nazreenpe/CarLog/raw/master/demo/CarLog.Nasreen.mp4)._
+
 A Java Spring Boot and React JS web application which helps users to track their car maintenance data. 
 Allows users to: 
  - Add and track cars
